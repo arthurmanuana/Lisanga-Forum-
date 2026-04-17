@@ -1,0 +1,340 @@
+/* Container principal - Transparent et léger */
+.filter-bar {
+  position: relative;
+  padding: 2.5rem 2rem;
+  background: transparent;
+  border-radius: 2rem;
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* Ligne supérieure */
+.filter-bar__top {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  align-items: center;
+}
+
+/* Recherche avec effet néon */
+.filter-bar__search {
+  position: relative;
+  flex: 1;
+  max-width: 500px;
+}
+
+.filter-bar__search-icon {
+  position: absolute;
+  left: 1.25rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #64748b;
+  z-index: 2;
+  transition: var(--transition);
+}
+
+.filter-bar__search--focused .filter-bar__search-icon {
+  color: var(--accent);
+}
+
+.filter-bar__input {
+  width: 100%;
+  padding: 1rem 3.5rem 1rem 3.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1rem;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.filter-bar__input:focus {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1),
+              0 0 20px rgba(37, 99, 235, 0.2);
+}
+
+.filter-bar__input::placeholder {
+  color: #64748b;
+}
+
+.filter-bar__clear {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: #94a3b8;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 2;
+}
+
+.filter-bar__clear:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+  transform: translateY(-50%) rotate(90deg);
+}
+
+/* Effet de lueur animé */
+.filter-bar__search-glow {
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, transparent, var(--accent), transparent);
+  border-radius: 1rem;
+  opacity: 0;
+  z-index: -1;
+  filter: blur(8px);
+  transition: opacity 0.3s ease;
+}
+
+.filter-bar__search--focused .filter-bar__search-glow {
+  opacity: 0.3;
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.6; }
+}
+
+/* Toggle de tri animé */
+.filter-bar__sort-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.5rem;
+  background: rgba(0, 0, 0, 0.04); /* Visible en mode clair */
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 1rem;
+  color: var(--text-primary); /* Texte forcé en couleur lisible */
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.filter-bar__sort-toggle:hover {
+  background: rgba(0, 0, 0, 0.07);
+  border-color: rgba(0, 0, 0, 0.15);
+  color: var(--text-primary); /* Garde le texte lisible au survol */
+  transform: translateY(-2px);
+}
+
+.filter-bar__sort-toggle--active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #ffffff;
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+}
+
+.filter-bar__sort-toggle--active:hover {
+  background: var(--accent-hover);
+  color: #ffffff; /* Force le texte blanc quand actif + survol */
+  transform: translateY(-2px);
+}
+
+/* Ajustement automatique pour le mode sombre */
+[data-theme="dark"] .filter-bar__sort-toggle {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .filter-bar__sort-toggle:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-primary);
+}
+
+.filter-bar__sort-icon {
+  transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.filter-bar__sort-icon--rotated {
+  transform: rotate(180deg);
+}
+
+/* Catégories - Chips flottantes */
+.filter-bar__categories {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.filter-bar__chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  padding: 0.75rem 1.25rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 2rem;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  animation: chip-slide-in 0.4s ease-out backwards;
+  animation-delay: var(--delay);
+}
+
+@keyframes chip-slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.filter-bar__chip:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+  color: var(--text-primary);
+}
+
+.filter-bar__chip--active {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.2), rgba(59, 130, 246, 0.1));
+  border-color: var(--accent);
+  color: #ffffff;
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.3),
+              inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px) scale(1.02);
+}
+
+.filter-bar__chip-text {
+  position: relative;
+  z-index: 1;
+}
+
+.filter-bar__chip-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding: 0 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 1rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.filter-bar__chip--active .filter-bar__chip-count {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.filter-bar__chip-count--active {
+  animation: count-bounce 0.4s ease;
+}
+
+@keyframes count-bounce {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+
+/* Effet de lueur pour chip active */
+.filter-bar__chip-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(37, 99, 235, 0.4), transparent 70%);
+  opacity: 0.5;
+  filter: blur(10px);
+  z-index: 0;
+  animation: glow-expand 0.4s ease-out;
+}
+
+@keyframes glow-expand {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+}
+
+/* Compteur de résultats */
+.filter-bar__results {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  justify-content: center;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.filter-bar__results-count {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--accent);
+  background: linear-gradient(135deg, var(--accent), #60a5fa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.filter-bar__results-label {
+  font-weight: 400;
+  letter-spacing: 0.02em;
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .filter-bar {
+    padding: 3rem 2.5rem;
+  }
+
+  .filter-bar__top {
+    gap: 2rem;
+  }
+
+  .filter-bar__categories {
+    justify-content: center;
+  }
+}
+
+/* Mode sombre - ajustements */
+[data-theme="dark"] .filter-bar__input {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .filter-bar__input:focus {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .filter-bar__sort-toggle,
+[data-theme="dark"] .filter-bar__chip {
+  background: rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .filter-bar__chip--active {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.3), rgba(59, 130, 246, 0.15));
+}

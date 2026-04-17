@@ -1,0 +1,218 @@
+/* Base Footer */
+.footer {
+  padding: 5rem 0 2rem;
+  background-color: var(--bg-secondary); /* Fond légèrement différent du reste */
+  border-top: 1px solid var(--border-color);
+  color: var(--text-secondary);
+}
+
+/* Section CTA (Le grand bloc noir/couleur en haut) */
+.footer__cta {
+  background-color: #0f172a; /* Couleur sombre fixe pour le contraste */
+  border-radius: 1.5rem;
+  padding: 3rem 2rem;
+  margin-bottom: 4rem;
+  text-align: center;
+  color: #ffffff;
+  box-shadow: var(--shadow-lg);
+}
+
+.footer__cta-title {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+.footer__cta-text {
+  font-size: 1.1rem;
+  opacity: 0.8;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  line-height: 1.6;
+}
+
+.footer__cta-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Boutons spécifiques au CTA */
+.btn-white {
+  background-color: #ffffff;
+  color: #0f172a;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.btn-white:hover {
+  background-color: #f1f5f9;
+  transform: translateY(-2px);
+}
+
+.btn-outline-white {
+  background-color: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.btn-outline-white:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: #ffffff;
+}
+
+/* Grille de liens */
+.footer__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3rem;
+  margin-bottom: 3rem;
+}
+
+.footer__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-decoration: none;
+  margin-bottom: 1rem;
+}
+
+.footer__logo-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  background-color: var(--accent);
+  color: #ffffff;
+  border-radius: 0.375rem;
+  font-size: 1rem;
+}
+
+.footer__description {
+  line-height: 1.6;
+  max-width: 300px;
+}
+
+.footer__col-title {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 1.25rem;
+}
+
+.footer__links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer__links li {
+  margin-bottom: 0.75rem;
+}
+
+.footer__links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: var(--transition);
+}
+
+.footer__links a:hover {
+  color: var(--accent);
+  padding-left: 4px;
+}
+
+/* Réseaux sociaux */
+.footer__socials {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.footer__social-link {
+  color: var(--text-secondary);
+  transition: var(--transition);
+  display: flex;
+}
+
+.footer__social-link:hover {
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+.footer__contact {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+}
+
+/* Barre du bas (Copyright) */
+.footer__bottom {
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.875rem;
+}
+
+.footer__bottom-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.footer__bottom-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.footer__bottom-links a:hover {
+  color: var(--text-primary);
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .footer__grid {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+  }
+  
+  .footer__bottom {
+    flex-direction: row;
+  }
+}
+
+@media (min-width: 1024px) {
+  .footer__cta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    padding: 4rem 3rem;
+  }
+  
+  .footer__cta-content {
+    max-width: 60%;
+  }
+  
+  .footer__cta-actions {
+    justify-content: flex-start;
+  }
+}
