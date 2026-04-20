@@ -2,14 +2,14 @@
 
 Plateforme moderne de publication et débat, développée par **NuruTech**.
 
-## 🚀 Stack Technique
+##  Stack Technique
 
 - **Frontend** : React 18+ / Vite / CSS Pur / React Router v6+
 - **State Management** : Context API
 - **Styling** : CSS Variables + Design System
 - **Mode** : Clair/Sombre sans rechargement
 
-## 📦 Installation
+##  Installation
 
 ```bash
 # Installer les dépendances
@@ -28,7 +28,7 @@ npm run preview
 npm run lint
 ```
 
-## 🏗️ Structure du Projet
+## ️ Structure du Projet
 
 ```
 lisanga-frontend/
@@ -45,7 +45,7 @@ lisanga-frontend/
 └── index.html           # Point d'entrée HTML
 ```
 
-## 🎨 Design System
+##  Design System
 
 Le projet utilise un design system strict avec :
 - Variables CSS pour couleurs, espacements, typographie
@@ -53,16 +53,16 @@ Le projet utilise un design system strict avec :
 - Composants harmonisés
 - Responsive mobile-first
 
-## 🔐 Authentification
+##  Authentification
 
 - JWT avec access token (15 min) + refresh token (7 jours)
 - Persistance dans localStorage
 - Routes protégées
 - Redirection intelligente post-login
 
-## 📋 Progression du Projet
+##  Progression du Projet
 
-### ✅ Tâches Terminées
+###  Tâches Terminées
 
 **Module Authentification (Login / Register)**
 - ✅ Tâche 1 : Page Login (`src/pages/Login.jsx` + `Login.css`)
@@ -106,7 +106,7 @@ Si vous devez reprendre ce projet après une pause :
    - /inscription → formulaire Register fonctionnel
    - Navbar affiche les boutons ou le profil selon l'état d'authentification
 
-### 📁 Fichiers Modifiés/Créés
+###  Fichiers Modifiés/Créés
 
 ```
 src/pages/
@@ -137,7 +137,7 @@ src/router.jsx   ⏳ (à modifier - Tâche 6)
 - ✅ Mode clair/sombre
 - ✅ Responsive design
 
-## 🔧 Configuration
+##  Configuration
 
 Copier `.env.example` vers `.env.local` et ajuster :
 
@@ -146,7 +146,7 @@ VITE_API_BASE_URL=http://localhost:5000/api
 VITE_USE_MOCK=true
 ```
 
-## 📚 Documentation
+##  Documentation
 
 - **Catégories** : Technologie, Business, Design, Communauté, Formation, Événement, Culture, Société
 - **Limites** : 
@@ -155,7 +155,7 @@ VITE_USE_MOCK=true
   - Contenu article : 100-10000 caractères
   - Commentaire : 1-1000 caractères
 
-## 🚀 Migration vers API Réelle
+##  Migration vers API Réelle
 
 Quand le backend sera prêt :
 
@@ -165,10 +165,10 @@ Quand le backend sera prêt :
 
 Aucun fichier code à modifier, tout est prêt !
 
-## 👥 Équipe
+##  Équipe
 
 Développé par **NuruTech** - 2026
 
-## 📄 Licence
+##  Licence
 
 Propriétaire - NuruTech
