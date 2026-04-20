@@ -96,8 +96,8 @@ function Navbar() {
 
           {/* Auth buttons (desktop) */}
           <div className="navbar__auth">
-            <a href="/connexion" className="navbar__btn navbar__btn--outline">Connexion</a>
-            <a href="/inscription" className="navbar__btn navbar__btn--solid">Inscription</a>
+            <a href="/login" className="navbar__btn navbar__btn--outline">Connexion</a>
+            <a href="/register" className="navbar__btn navbar__btn--solid">Inscription</a>
           </div>
 
           {/* Hamburger (mobile) */}
@@ -151,10 +151,10 @@ function Navbar() {
             </ul>
           </nav>
           <div className="navbar__mobile-auth">
-            <a href="/connexion" className="navbar__btn navbar__btn--outline navbar__btn--full" onClick={() => setMenuOpen(false)}>
+            <a href="/login" className="navbar__btn navbar__btn--outline navbar__btn--full" onClick={() => setMenuOpen(false)}>
               Connexion
             </a>
-            <a href="/inscription" className="navbar__btn navbar__btn--solid navbar__btn--full" onClick={() => setMenuOpen(false)}>
+            <a href="/register" className="navbar__btn navbar__btn--solid navbar__btn--full" onClick={() => setMenuOpen(false)}>
               Inscription
             </a>
           </div>

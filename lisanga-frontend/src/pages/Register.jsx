@@ -110,7 +110,7 @@ function Register() {
       await register(formData.username, formData.email, formData.password);
       
       // Redirect to login page with success message
-      navigate('/connexion', { 
+      navigate('/login', { 
         state: { 
           message: 'Inscription réussie ! Vous pouvez maintenant vous connecter.' 
         } 
@@ -231,7 +231,7 @@ function Register() {
         <div className="register-footer">
           <p className="register-footer-text">
             Déjà un compte ?{' '}
-            <a href="/connexion" className="register-footer-link">
+            <a href="/login" className="register-footer-link">
               Se connecter
             </a>
           </p>
