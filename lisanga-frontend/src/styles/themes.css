@@ -1,0 +1,33 @@
+body[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+body[data-theme="light"] {
+  color-scheme: light;
+}
+
+body {
+  transition: 
+    background-color 250ms ease,
+    color 250ms ease;
+}
+
+*,
+*::before,
+*::after {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-timing-function: ease;
+  transition-duration: 250ms;
+}
+
+button,
+a,
+input,
+textarea,
+select {
+  transition: 
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease,
+    box-shadow 150ms ease;
+}
