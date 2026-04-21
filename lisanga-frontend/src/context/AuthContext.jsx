@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, useCallback } from 'react';
 import { authService } from '../services/authService';
-import { LOCAL_STORAGE_KEYS } from '../utils/constants';
+import { LOCAL_STORAGE_KEYS, SESSION_STORAGE_KEYS } from '../utils/constants';
 
 export const AuthContext = createContext();
 
@@ -17,13 +17,27 @@ export const AuthProvider = ({ children }) => {
       
       if (token) {
         setAccessToken(token);
+        
+        const response = await authService.getProfile();
+        setUser(response.user);
         setIsAuthenticated(true);
+        
+        const redirectUrl = sessionStorage.getItem(SESSION_STORAGE_KEYS.redirectUrl);
+        if (redirectUrl) {
+          sessionStorage.removeItem(SESSION_STORAGE_KEYS.redirectUrl);
+          window.location.href = redirectUrl;
+        }
+        
         setLoading(false);
       } else {
         setLoading(false);
       }
     } catch (err) {
       console.error('Auth check error:', err);
+      setUser(null);
+      setAccessToken(null);
+      setIsAuthenticated(false);
+      localStorage.removeItem(LOCAL_STORAGE_KEYS.accessToken);
       setLoading(false);
     }
   }, []);
