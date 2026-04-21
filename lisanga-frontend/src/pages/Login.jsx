@@ -174,7 +174,7 @@ function Login() {
         <div className="login-footer">
           <p className="login-footer-text">
             Pas encore de compte ?{' '}
-            <a href="/register" className="login-footer-link">
+            <a href="/inscription" className="login-footer-link">
               Créer un compte
             </a>
           </p>

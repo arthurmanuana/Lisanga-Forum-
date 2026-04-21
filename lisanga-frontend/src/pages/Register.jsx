@@ -231,7 +231,7 @@ function Register() {
         <div className="register-footer">
           <p className="register-footer-text">
             Déjà un compte ?{' '}
-            <a href="/login" className="register-footer-link">
+            <a href="/connexion" className="register-footer-link">
               Se connecter
             </a>
           </p>
