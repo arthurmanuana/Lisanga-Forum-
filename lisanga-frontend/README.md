@@ -79,9 +79,10 @@ Le projet utilise un design system strict avec :
 ### ⏳ Tâches Restantes
 
 **Module Authentification (suite)**
-- ⏳ Tâche 3 : Améliorer `AuthContext.checkAuth`
-  - Appeler `authService.getProfile()` au rechargement pour restaurer `user`
+- ✅ Tâche 3 : Améliorer `AuthContext.checkAuth`
+  - Appelle `authService.getProfile()` au rechargement pour restaurer `user`
   - Gestion redirection intelligente via `sessionStorage.redirect_url`
+  - Nettoyage automatique si token invalide/expiré
 - ⏳ Tâche 4 : Créer `ProtectedRoute` (`src/components/common/ProtectedRoute.jsx`)
   - Vérifier `isAuthenticated` depuis AuthContext
   - Afficher Loader pendant loading
