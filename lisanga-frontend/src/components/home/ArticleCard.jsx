@@ -6,7 +6,7 @@ function ArticleCard({ article }) {
     id,
     title,
     excerpt,
-    image,
+    imageUrl,
     category,
     author,
     createdAt,
@@ -19,7 +19,7 @@ function ArticleCard({ article }) {
       <a href={`/articles/${id}`} className="article-card__image-link" tabIndex={-1} aria-hidden="true">
         <div className="article-card__image-wrapper">
           <img
-            src={image}
+            src={imageUrl}
             alt={title}
             className="article-card__image"
             loading="lazy"
@@ -44,21 +44,21 @@ function ArticleCard({ article }) {
 
         <div className="article-card__footer">
           <div className="article-card__author">
-            {author?.avatar ? (
+            {author?.avatarUrl ? (
               <img
-                src={author.avatar}
-                alt={author.name}
+                src={author.avatarUrl}
+                alt={author.username}
                 className="article-card__avatar"
                 loading="lazy"
                 decoding="async"
               />
             ) : (
               <div className="article-card__avatar article-card__avatar--initials" aria-hidden="true">
-                {author?.name ? author.name.charAt(0).toUpperCase() : '?'}
+                {author?.username ? author.username.charAt(0).toUpperCase() : '?'}
               </div>
             )}
             <div className="article-card__author-info">
-              <span className="article-card__author-name">{author?.name || 'Auteur inconnu'}</span>
+              <span className="article-card__author-name">{author?.username || 'Auteur inconnu'}</span>
               <time className="article-card__date" dateTime={createdAt}>
                 {formatDate(createdAt)}
               </time>

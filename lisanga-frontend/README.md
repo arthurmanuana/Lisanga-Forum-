@@ -67,10 +67,10 @@ Le projet utilise un design system strict avec :
 | Module | Status | Tâches |
 |--------|--------|--------|
 | **Authentification** | ✅ Terminé | 6/6 |
-| **Article** | ⏳ En attente | 0/4 |
+| **Article** | ✅ Terminé | 4/4 |
 | **Commentaire** | ⏳ En attente | 0/2 |
 | **Like/Dislike** | ⏳ En attente | 0/1 |
-| **Recherche/Filtres** | ⏳ En attente | 0/2 |
+| **Recherche/Filtres** | ⏳ En attente | 0/3 |
 | **Admin Dashboard** | ⏳ En attente | 0/4 |
 | **Profil Utilisateur** | ⏳ En attente | 0/3 |
 
@@ -88,13 +88,13 @@ Le projet utilise un design system strict avec :
 
 ---
 
-### ⏳ Module Article - EN ATTENTE
+### ✅ Module Article - TERMINÉ
 
-**Tâches à réaliser (4/4):**
-- ⏳ Tâche 7 : Page Liste Articles (`/articles`)
-- ⏳ Tâche 8 : Page Détail Article (`/articles/:id`)
-- ⏳ Tâche 9 : Page Créer Article (`/creer-article`)
-- ⏳ Tâche 10 : Page Modifier Article (`/articles/:id/edit`)
+**Tâches réalisées (4/4):**
+- ✅ Tâche 7 : Page Liste Articles (`/articles`)
+- ✅ Tâche 8 : Page Détail Article (`/articles/:id`)
+- ✅ Tâche 9 : Page Créer Article (`/creer-article`)
+- ✅ Tâche 10 : Page Modifier Article (`/articles/:id/edit`)
 
 ---
 
@@ -145,27 +145,34 @@ Le projet utilise un design system strict avec :
 
 ```
 src/pages/
-├── Login.jsx       ✅
-├── Login.css       ✅
-├── Register.jsx    ✅
-└── Register.css    ✅
+├── Login.jsx           ✅
+├── Login.css           ✅
+├── Register.jsx        ✅
+├── Register.css        ✅
+├── Articles.jsx        ✅
+├── Articles.css        ✅
+├── ArticleDetail.jsx   ✅
+├── ArticleDetail.css   ✅
+├── CreateArticle.jsx   ✅
+├── CreateArticle.css   ✅
+├── EditArticle.jsx     ✅
+└── EditArticle.css     ✅
+
+src/components/home/
+└── ArticleCard.jsx     ✅ (corrigé)
 
 src/context/
-└── AuthContext.jsx    ✅
+└── AuthContext.jsx     ✅
 
 src/components/common/
-├── ProtectedRoute.jsx ✅
-├── Navbar.jsx         ✅
-└── Navbar.css        ✅
+├── ProtectedRoute.jsx  ✅
+├── Navbar.jsx          ✅
+└── Navbar.css         ✅
 
-src/router.jsx          ✅
+src/router.jsx           ✅
 
 # En attente de création :
 src/pages/
-├── Articles.jsx          ⏳
-├── ArticleDetail.jsx     ⏳
-├── CreateArticle.jsx     ⏳
-├── EditArticle.jsx       ⏳
 ├── Profile.jsx           ⏳
 └── Admin.jsx             ⏳
 ```
@@ -174,7 +181,7 @@ src/pages/
 
 ###  Ordre de Travail Recommandé
 
-1. **Module Article** (Tâches 7-10) - Priorité haute
+1. ~~Module Article~~ (Tâches 7-10) - ✅ TERMINÉ
 2. **Module Commentaire** (Tâches 11-12) - Dépend du module Article
 3. **Module Like/Dislike** (Tâche 13) - Dépend du module Article
 4. **Module Recherche/Filtres** (Tâches 14-16) - Indépendant
