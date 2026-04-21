@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { useTheme } from '../../hooks/useTheme';
+import { useAuth } from '../../hooks/useAuth';
 import './Navbar.css';
 
 const NAV_LINKS = [
@@ -11,9 +13,14 @@ const NAV_LINKS = [
 
 function Navbar() {
   const { theme, toggleTheme } = useTheme();
+  const { user, isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+  
   const [menuOpen, setMenuOpen] = useState(false);
+  const [profileOpen, setProfileOpen] = useState(false);
   const menuRef = useRef(null);
   const hamburgerRef = useRef(null);
+  const profileRef = useRef(null);
 
   useEffect(() => {
     function handleOutsideClick(e) {
@@ -25,12 +32,18 @@ function Navbar() {
       ) {
         setMenuOpen(false);
       }
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(e.target)
+      ) {
+        setProfileOpen(false);
+      }
     }
-    if (menuOpen) {
+    if (menuOpen || profileOpen) {
       document.addEventListener('mousedown', handleOutsideClick);
     }
     return () => document.removeEventListener('mousedown', handleOutsideClick);
-  }, [menuOpen]);
+  }, [menuOpen, profileOpen]);
 
   useEffect(() => {
     if (menuOpen) {
@@ -40,6 +53,17 @@ function Navbar() {
     }
     return () => { document.body.style.overflow = ''; };
   }, [menuOpen]);
+
+  const handleLogout = () => {
+    logout();
+    setProfileOpen(false);
+    navigate('/');
+  };
+
+  const getInitials = (username) => {
+    if (!username) return '?';
+    return username.charAt(0).toUpperCase();
+  };
 
   return (
     <header className="navbar">
@@ -94,11 +118,59 @@ function Navbar() {
             )}
           </button>
 
-          {/* Auth buttons (desktop) */}
-          <div className="navbar__auth">
-            <a href="/login" className="navbar__btn navbar__btn--outline">Connexion</a>
-            <a href="/register" className="navbar__btn navbar__btn--solid">Inscription</a>
-          </div>
+          {/* Auth - Desktop */}
+          {isAuthenticated ? (
+            <div className="navbar__profile" ref={profileRef}>
+              <button
+                type="button"
+                className="navbar__profile-btn"
+                onClick={() => setProfileOpen(prev => !prev)}
+                aria-expanded={profileOpen}
+                aria-haspopup="true"
+              >
+                <span className="navbar__avatar">{getInitials(user?.username)}</span>
+                <span className="navbar__username">{user?.username}</span>
+                <svg className={`navbar__chevron ${profileOpen ? 'navbar__chevron--up' : ''}`} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
+              </button>
+              
+              {profileOpen && (
+                <div className="navbar__dropdown" role="menu">
+                  <div className="navbar__dropdown-header">
+                    <span className="navbar__dropdown-name">{user?.username}</span>
+                    <span className="navbar__dropdown-email">{user?.email}</span>
+                  </div>
+                  <div className="navbar__dropdown-divider" />
+                  <Link to="/profil" className="navbar__dropdown-item" role="menuitem" onClick={() => setProfileOpen(false)}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                      <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    Profil
+                  </Link>
+                  <button
+                    type="button"
+                    className="navbar__dropdown-item navbar__dropdown-item--danger"
+                    role="menuitem"
+                    onClick={handleLogout}
+                  >
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                      <polyline points="16 17 21 12 16 7" />
+                      <line x1="21" y1="12" x2="9" y2="12" />
+                    </svg>
+                    Déconnexion
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="navbar__auth">
+              <Link to="/connexion" className="navbar__btn navbar__btn--outline">Connexion</Link>
+              <Link to="/inscription" className="navbar__btn navbar__btn--solid">Inscription</Link>
+            </div>
+          )}
 
           {/* Hamburger (mobile) */}
           <button
@@ -150,14 +222,40 @@ function Navbar() {
               ))}
             </ul>
           </nav>
-          <div className="navbar__mobile-auth">
-            <a href="/login" className="navbar__btn navbar__btn--outline navbar__btn--full" onClick={() => setMenuOpen(false)}>
-              Connexion
-            </a>
-            <a href="/register" className="navbar__btn navbar__btn--solid navbar__btn--full" onClick={() => setMenuOpen(false)}>
-              Inscription
-            </a>
-          </div>
+          
+          {/* Auth - Mobile */}
+          {isAuthenticated ? (
+            <div className="navbar__mobile-auth">
+              <div className="navbar__mobile-profile">
+                <span className="navbar__avatar navbar__avatar--lg">{getInitials(user?.username)}</span>
+                <div className="navbar__mobile-profile-info">
+                  <span className="navbar__mobile-profile-name">{user?.username}</span>
+                  <span className="navbar__mobile-profile-email">{user?.email}</span>
+                </div>
+              </div>
+              <div className="navbar__mobile-auth-actions">
+                <Link to="/profil" className="navbar__btn navbar__btn--outline navbar__btn--full" onClick={() => setMenuOpen(false)}>
+                  Profil
+                </Link>
+                <button
+                  type="button"
+                  className="navbar__btn navbar__btn--outline navbar__btn--full navbar__btn--danger"
+                  onClick={() => { handleLogout(); setMenuOpen(false); }}
+                >
+                  Déconnexion
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="navbar__mobile-auth">
+              <Link to="/connexion" className="navbar__btn navbar__btn--outline navbar__btn--full" onClick={() => setMenuOpen(false)}>
+                Connexion
+              </Link>
+              <Link to="/inscription" className="navbar__btn navbar__btn--solid navbar__btn--full" onClick={() => setMenuOpen(false)}>
+                Inscription
+              </Link>
+            </div>
+          )}
         </div>
       )}
     </header>
