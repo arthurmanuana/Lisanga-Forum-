@@ -1,16 +1,14 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import dotenv from "dotenv";
-
-dotenv.config();
+import { env } from "./config/env.js";
+import { pool } from "./db/pool.js";
 
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN || "http://localhost:5173",
+    origin: env.CORS_ORIGIN,
     credentials: true,
   })
 );
@@ -25,6 +23,23 @@ app.get("/api/health", (req, res) => {
   });
 });
 
+app.get("/api/health/db", async (req, res) => {
+  try {
+    const { rows } = await pool.query("SELECT NOW() AS now");
+    res.json({
+      status: "ok",
+      database: "connected",
+      serverTime: rows[0].now,
+    });
+  } catch (err) {
+    res.status(503).json({
+      status: "error",
+      database: "disconnected",
+      message: err.message,
+    });
+  }
+});
+
 app.use((req, res) => {
   res.status(404).json({
     error: "NotFound",
@@ -33,6 +48,15 @@ app.use((req, res) => {
   });
 });
 
-app.listen(PORT, () => {
-  console.log(`✅ Lisanga API démarrée sur http://localhost:${PORT}`);
+app.use((err, req, res, _next) => {
+  console.error("💥 Erreur non gérée :", err);
+  res.status(err.status || 500).json({
+    error: err.name || "InternalServerError",
+    code: err.status || 500,
+    message: err.message || "Une erreur inattendue est survenue",
+  });
+});
+
+app.listen(env.PORT, () => {
+  console.log(`✅ Lisanga API démarrée sur http://localhost:${env.PORT}`);
 });
