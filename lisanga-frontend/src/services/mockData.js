@@ -8,6 +8,7 @@ export const mockUsers = [
     id: '1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p',
     username: 'admin',
     email: 'admin@lisanga.com',
+    password: 'Password123!',
     role: 'admin',
     avatarUrl: null,
     createdAt: '2026-01-15T10:00:00.000Z',
@@ -17,6 +18,7 @@ export const mockUsers = [
     id: '2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q',
     username: 'marie_dubois',
     email: 'marie@example.com',
+    password: 'Password123!',
     role: 'user',
     avatarUrl: null,
     createdAt: '2026-02-10T14:30:00.000Z',
@@ -26,6 +28,7 @@ export const mockUsers = [
     id: '3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r',
     username: 'jean_martin',
     email: 'jean@example.com',
+    password: 'Password123!',
     role: 'user',
     avatarUrl: null,
     createdAt: '2026-02-15T09:00:00.000Z',
@@ -35,6 +38,7 @@ export const mockUsers = [
     id: '4d5e6f7g-8h9i-0j1k-2l3m-4n5o6p7q8r9s',
     username: 'sophie_bernard',
     email: 'sophie@example.com',
+    password: 'Password123!',
     role: 'user',
     avatarUrl: null,
     createdAt: '2026-03-01T16:45:00.000Z',
@@ -44,9 +48,20 @@ export const mockUsers = [
     id: '5e6f7g8h-9i0j-1k2l-3m4n-5o6p7q8r9s0t',
     username: 'luc_petit',
     email: 'luc@example.com',
+    password: 'Password123!',
     role: 'user',
     avatarUrl: null,
     createdAt: '2026-03-10T11:20:00.000Z',
+    isActive: true
+  },
+  {
+    id: '6f7g8h9i-0j1k-2l3m-4n5o-6p7q8r9s0t1u',
+    username: 'emma',
+    email: 'emma@gmail.com',
+    password: 'Emma@2026',
+    role: 'user',
+    avatarUrl: null,
+    createdAt: '2026-04-21T00:00:00.000Z',
     isActive: true
   }
 ];

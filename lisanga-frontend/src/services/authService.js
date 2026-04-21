@@ -8,7 +8,7 @@ export const authService = {
       
       const user = mockUsers.find(u => u.email === email);
       
-      if (!user || password !== 'Password123!') {
+      if (!user || user.password !== password) {
         throw new Error('Email ou mot de passe incorrect');
       }
       
