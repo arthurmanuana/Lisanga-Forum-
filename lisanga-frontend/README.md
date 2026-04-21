@@ -68,7 +68,7 @@ Le projet utilise un design system strict avec :
 |--------|--------|--------|
 | **Authentification** | ✅ Terminé | 6/6 |
 | **Article** | ✅ Terminé | 4/4 |
-| **Commentaire** | ⏳ En attente | 0/2 |
+| **Commentaire** | ✅ Terminé | 2/2 |
 | **Like/Dislike** | ⏳ En attente | 0/1 |
 | **Recherche/Filtres** | ⏳ En attente | 0/3 |
 | **Admin Dashboard** | ⏳ En attente | 0/4 |
@@ -98,11 +98,11 @@ Le projet utilise un design system strict avec :
 
 ---
 
-### ⏳ Module Commentaire - EN ATTENTE
+### ✅ Module Commentaire - TERMINÉ
 
-**Tâches à réaliser (2/2):**
-- ⏳ Tâche 11 : Système d'affichage commentaires (2 niveaux)
-- ⏳ Tâche 12 : Formulaire ajout commentaire avec validation
+**Tâches réalisées (2/2):**
+- ✅ Tâche 11 : Système d'affichage commentaires (2 niveaux)
+- ✅ Tâche 12 : Formulaire ajout commentaire avec validation
 
 ---
 
@@ -148,7 +148,7 @@ src/pages/
 ├── Login.jsx           ✅
 ├── Login.css           ✅
 ├── Register.jsx        ✅
-├── Register.css        ✅
+├── Register.css       ✅
 ├── Articles.jsx        ✅
 ├── Articles.css        ✅
 ├── ArticleDetail.jsx   ✅
@@ -158,16 +158,25 @@ src/pages/
 ├── EditArticle.jsx     ✅
 └── EditArticle.css     ✅
 
-src/components/home/
-└── ArticleCard.jsx     ✅ (corrigé)
+src/components/
+├── home/
+│   └── ArticleCard.jsx     ✅ (corrigé)
+├── comment/
+│   ├── CommentList.jsx     ✅
+│   ├── CommentList.css     ✅
+│   ├── CommentForm.jsx     ✅
+│   └── CommentForm.css     ✅
+└── common/
+    ├── ProtectedRoute.jsx  ✅
+    ├── Navbar.jsx          ✅
+    └── Navbar.css         ✅
+
+src/services/
+├── articleService.js    ✅ (commentService ajouté)
+└── commentService.js    ✅ (nouveau)
 
 src/context/
 └── AuthContext.jsx     ✅
-
-src/components/common/
-├── ProtectedRoute.jsx  ✅
-├── Navbar.jsx          ✅
-└── Navbar.css         ✅
 
 src/router.jsx           ✅
 
@@ -182,7 +191,7 @@ src/pages/
 ###  Ordre de Travail Recommandé
 
 1. ~~Module Article~~ (Tâches 7-10) - ✅ TERMINÉ
-2. **Module Commentaire** (Tâches 11-12) - Dépend du module Article
+2. ~~Module Commentaire~~ (Tâches 11-12) - ✅ TERMINÉ
 3. **Module Like/Dislike** (Tâche 13) - Dépend du module Article
 4. **Module Recherche/Filtres** (Tâches 14-16) - Indépendant
 5. **Module Admin Dashboard** (Tâches 17-20) - Nécessite auth admin

@@ -180,3 +180,27 @@
     flex: 1;
   }
 }
+
+/* Comments section */
+.article-detail__comments {
+  margin-top: var(--space-3xl);
+  padding-top: var(--space-2xl);
+  border-top: 1px solid var(--color-border);
+}
+
+.article-detail__comments-title {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--space-xl);
+}
+
+.article-detail__comments-loading {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-2xl);
+}
+
+.article-detail__reply-form {
+  margin-top: var(--space-lg);
+}

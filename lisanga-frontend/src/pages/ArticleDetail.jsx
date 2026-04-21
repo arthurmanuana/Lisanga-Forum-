@@ -5,7 +5,10 @@ import Footer from '../components/common/Footer';
 import Loader from '../components/common/Loader';
 import ErrorMessage from '../components/common/ErrorMessage';
 import Button from '../components/common/Button';
+import CommentList from '../components/comment/CommentList';
+import CommentForm from '../components/comment/CommentForm';
 import { articleService } from '../services/articleService';
+import { commentService } from '../services/commentService';
 import { formatDateLong } from '../utils/formatters';
 import { useAuth } from '../hooks/useAuth';
 import './ArticleDetail.css';
@@ -18,6 +21,11 @@ function ArticleDetail() {
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  const [comments, setComments] = useState([]);
+  const [loadingComments, setLoadingComments] = useState(false);
+  const [submittingComment, setSubmittingComment] = useState(false);
+  const [replyingTo, setReplyingTo] = useState(null);
   
   useEffect(() => {
     const loadArticle = async () => {
@@ -38,6 +46,24 @@ function ArticleDetail() {
     }
   }, [id]);
   
+  useEffect(() => {
+    const loadComments = async () => {
+      if (!id) return;
+      
+      try {
+        setLoadingComments(true);
+        const response = await commentService.getCommentsByArticle(id);
+        setComments(response.comments);
+      } catch (err) {
+        console.error('Erreur lors du chargement des commentaires:', err);
+      } finally {
+        setLoadingComments(false);
+      }
+    };
+    
+    loadComments();
+  }, [id]);
+  
   const handleEdit = () => {
     navigate(`/articles/${id}/edit`);
   };
@@ -49,6 +75,71 @@ function ArticleDetail() {
         navigate('/articles');
       } catch (err) {
         setError(err.message || 'Erreur lors de la suppression');
+      }
+    }
+  };
+  
+  const handleAddComment = async (content) => {
+    if (!isAuthenticated) {
+      sessionStorage.setItem('redirect_url', `/articles/${id}`);
+      navigate('/connexion');
+      return;
+    }
+    
+    try {
+      setSubmittingComment(true);
+      const response = await commentService.addComment(id, content);
+      setComments(prev => [...prev, response.comment]);
+    } catch (err) {
+      console.error('Erreur lors de l\'ajout du commentaire:', err);
+    } finally {
+      setSubmittingComment(false);
+    }
+  };
+  
+  const handleReply = (commentId) => {
+    if (!isAuthenticated) {
+      sessionStorage.setItem('redirect_url', `/articles/${id}`);
+      navigate('/connexion');
+      return;
+    }
+    setReplyingTo(commentId);
+  };
+  
+  const handleCancelReply = () => {
+    setReplyingTo(null);
+  };
+  
+  const handleSubmitReply = async (content) => {
+    try {
+      setSubmittingComment(true);
+      const response = await commentService.addComment(id, content, replyingTo);
+      
+      setComments(prev => prev.map(comment => {
+        if (comment.id === replyingTo) {
+          return {
+            ...comment,
+            replies: [...(comment.replies || []), response.comment]
+          };
+        }
+        return comment;
+      }));
+      
+      setReplyingTo(null);
+    } catch (err) {
+      console.error('Erreur lors de la réponse au commentaire:', err);
+    } finally {
+      setSubmittingComment(false);
+    }
+  };
+  
+  const handleDeleteComment = async (commentId) => {
+    if (window.confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?')) {
+      try {
+        await commentService.deleteComment(commentId);
+        setComments(prev => prev.filter(c => c.id !== commentId));
+      } catch (err) {
+        console.error('Erreur lors de la suppression du commentaire:', err);
       }
     }
   };
@@ -179,10 +270,47 @@ function ArticleDetail() {
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                   </svg>
-                  {article.commentsCount || 0} commentaires
+                  {comments.length} commentaires
                 </span>
               </div>
             </footer>
+            
+            <section className="article-detail__comments">
+              <h2 className="article-detail__comments-title">Commentaires</h2>
+              
+              <CommentForm
+                onSubmit={handleAddComment}
+                isLoading={submittingComment}
+                placeholder="Écrivez un commentaire..."
+              />
+              
+              {loadingComments ? (
+                <div className="article-detail__comments-loading">
+                  <Loader size="md" />
+                </div>
+              ) : (
+                <>
+                  <CommentList
+                    comments={comments}
+                    onReply={handleReply}
+                    onDelete={handleDeleteComment}
+                    currentUserId={user?.id}
+                  />
+                  
+                  {replyingTo && (
+                    <div className="article-detail__reply-form">
+                      <CommentForm
+                        onSubmit={handleSubmitReply}
+                        isLoading={submittingComment}
+                        isReply={true}
+                        onCancel={handleCancelReply}
+                        placeholder="Écrivez votre réponse..."
+                      />
+                    </div>
+                  )}
+                </>
+              )}
+            </section>
           </div>
         </div>
       </article>
