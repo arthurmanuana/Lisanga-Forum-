@@ -62,72 +62,124 @@ Le projet utilise un design system strict avec :
 
 ##  Progression du Projet
 
-###  Tâches Terminées
+###  Vue d'Ensemble des Modules
 
-**Module Authentification (Login / Register)**
+| Module | Status | Tâches |
+|--------|--------|--------|
+| **Authentification** | ✅ Terminé | 6/6 |
+| **Article** | ⏳ En attente | 0/4 |
+| **Commentaire** | ⏳ En attente | 0/2 |
+| **Like/Dislike** | ⏳ En attente | 0/1 |
+| **Recherche/Filtres** | ⏳ En attente | 0/2 |
+| **Admin Dashboard** | ⏳ En attente | 0/4 |
+| **Profil Utilisateur** | ⏳ En attente | 0/3 |
+
+---
+
+### ✅ Module Authentification - TERMINÉ
+
+**Tâches réalisées (6/6):**
 - ✅ Tâche 1 : Page Login (`src/pages/Login.jsx` + `Login.css`)
-  - Formulaire email/password avec validation côté client
-  - Gestion des états loading/error/success
-  - Toggle mot de passe (via Input component)
-  - Redirection intelligente via sessionStorage
 - ✅ Tâche 2 : Page Register (`src/pages/Register.jsx` + `Register.css`)
-  - Formulaire username/email/password/confirmPassword
-  - Validation complète (blur + submit)
-  - Lien Conditions et Politique de confidentialité
-  - Redirection vers Login avec message de succès
-
-### ⏳ Tâches Restantes
-
-**Module Authentification (suite)**
 - ✅ Tâche 3 : Améliorer `AuthContext.checkAuth`
-  - Appelle `authService.getProfile()` au rechargement pour restaurer `user`
-  - Gestion redirection intelligente via `sessionStorage.redirect_url`
-  - Nettoyage automatique si token invalide/expiré
 - ✅ Tâche 4 : Créer `ProtectedRoute` (`src/components/common/ProtectedRoute.jsx`)
-  - Vérifie `isAuthenticated` depuis AuthContext
-  - Affiche Loader pendant loading
-  - Redirige vers /connexion si non connecté
 - ✅ Tâche 5 : Connecter Navbar à AuthContext
-  - Affiche avatar + nom + "Déconnexion" si connecté
-  - Affiche "Connexion" + "Inscription" si non connecté
-  - Dropdown menu pour le profil utilisateur (desktop et mobile)
 - ✅ Tâche 6 : Mettre à jour le Router (`src/router.jsx`)
-  - Routes /connexion et /inscription (français)
-  - Routes protégées /admin et /creer-article via ProtectedRoute
 
-###  Module Authentification - TERMINÉ
+---
 
-Toutes les tâches du module authentification sont terminées :
-- ✅ Tâches 1-6 : Login, Register, AuthContext, ProtectedRoute, Navbar, Router
+### ⏳ Module Article - EN ATTENTE
 
-###  Prochaines Étapes
+**Tâches à réaliser (4/4):**
+- ⏳ Tâche 7 : Page Liste Articles (`/articles`)
+- ⏳ Tâche 8 : Page Détail Article (`/articles/:id`)
+- ⏳ Tâche 9 : Page Créer Article (`/creer-article`)
+- ⏳ Tâche 10 : Page Modifier Article (`/articles/:id/edit`)
 
-**Module Article (Création & Affichage)**
-- Tâche 7 : Page Liste Articles (`/articles`)
-- Tâche 8 : Page Détail Article (`/articles/:id`)
-- Tâche 9 : Page Créer Article (`/creer-article`)
-- Tâche 10 : Page Modifier Article (`/articles/:id/edit`)
+---
+
+### ⏳ Module Commentaire - EN ATTENTE
+
+**Tâches à réaliser (2/2):**
+- ⏳ Tâche 11 : Système d'affichage commentaires (2 niveaux)
+- ⏳ Tâche 12 : Formulaire ajout commentaire avec validation
+
+---
+
+### ⏳ Module Like/Dislike - EN ATTENTE
+
+**Tâches à réaliser (1/1):**
+- ⏳ Tâche 13 : Système de vote binaire (1 vote par article, modifiable)
+
+---
+
+### ⏳ Module Recherche/Filtres - EN ATTENTE
+
+**Tâches à réaliser (2/2):**
+- ⏳ Tâche 14 : Filtres par catégorie
+- ⏳ Tâche 15 : Options de tri (récent, populaire, commenté)
+- ⏳ Tâche 16 : Barre de recherche articles
+
+---
+
+### ⏳ Module Admin Dashboard - EN ATTENTE
+
+**Tâches à réaliser (4/4):**
+- ⏳ Tâche 17 : Page Dashboard Admin (`/admin`)
+- ⏳ Tâche 18 : Statistiques et métriques
+- ⏳ Tâche 19 : Gestion des articles (modération)
+- ⏳ Tâche 20 : Gestion des utilisateurs (bannissement)
+
+---
+
+### ⏳ Module Profil Utilisateur - EN ATTENTE
+
+**Tâches à réaliser (3/3):**
+- ⏳ Tâche 21 : Page Profil (`/profil`)
+- ⏳ Tâche 22 : Modification informations utilisateur
+- ⏳ Tâche 23 : Historique des articles/commentaires
+
+---
 
 ###  Fichiers Modifiés/Créés
 
 ```
 src/pages/
-├── Login.jsx      ✅
-├── Login.css      ✅
-├── Register.jsx   ✅
-└── Register.css   ✅
+├── Login.jsx       ✅
+├── Login.css       ✅
+├── Register.jsx    ✅
+└── Register.css    ✅
 
 src/context/
-└── AuthContext.jsx   ✅
+└── AuthContext.jsx    ✅
 
 src/components/common/
-├── ProtectedRoute.jsx   ✅ (nouveau)
-├── Navbar.jsx           ✅
-├── Navbar.css          ✅
-└── Navbar.css          ✅
+├── ProtectedRoute.jsx ✅
+├── Navbar.jsx         ✅
+└── Navbar.css        ✅
 
-src/router.jsx   ✅
+src/router.jsx          ✅
+
+# En attente de création :
+src/pages/
+├── Articles.jsx          ⏳
+├── ArticleDetail.jsx     ⏳
+├── CreateArticle.jsx     ⏳
+├── EditArticle.jsx       ⏳
+├── Profile.jsx           ⏳
+└── Admin.jsx             ⏳
 ```
+
+---
+
+###  Ordre de Travail Recommandé
+
+1. **Module Article** (Tâches 7-10) - Priorité haute
+2. **Module Commentaire** (Tâches 11-12) - Dépend du module Article
+3. **Module Like/Dislike** (Tâche 13) - Dépend du module Article
+4. **Module Recherche/Filtres** (Tâches 14-16) - Indépendant
+5. **Module Admin Dashboard** (Tâches 17-20) - Nécessite auth admin
+6. **Module Profil** (Tâches 21-23) - Dépend de auth
 
 ---
 
