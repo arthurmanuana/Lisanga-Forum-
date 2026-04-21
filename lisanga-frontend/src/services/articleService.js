@@ -121,5 +121,50 @@ export const articleService = {
     }
     
     return api.delete(`/articles/${id}`);
+  },
+  
+  likeArticle: async (id) => {
+    if (isMockMode()) {
+      await delay(500);
+      
+      const storageKey = `lisanga_vote_${id}`;
+      const previousVote = localStorage.getItem(storageKey);
+      
+      if (previousVote === 'like') {
+        localStorage.removeItem(storageKey);
+        return { action: 'removed', vote: null };
+      }
+      
+      localStorage.setItem(storageKey, 'like');
+      return { action: 'liked', vote: 'like' };
+    }
+    
+    return api.post(`/articles/${id}/like`);
+  },
+  
+  dislikeArticle: async (id) => {
+    if (isMockMode()) {
+      await delay(500);
+      
+      const storageKey = `lisanga_vote_${id}`;
+      const previousVote = localStorage.getItem(storageKey);
+      
+      if (previousVote === 'dislike') {
+        localStorage.removeItem(storageKey);
+        return { action: 'removed', vote: null };
+      }
+      
+      localStorage.setItem(storageKey, 'dislike');
+      return { action: 'disliked', vote: 'dislike' };
+    }
+    
+    return api.post(`/articles/${id}/dislike`);
+  },
+  
+  getUserVote: (articleId) => {
+    if (isMockMode()) {
+      return localStorage.getItem(`lisanga_vote_${articleId}`);
+    }
+    return null;
   }
 };

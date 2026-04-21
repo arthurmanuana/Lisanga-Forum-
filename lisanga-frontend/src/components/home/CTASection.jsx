@@ -15,7 +15,7 @@ function CTASection() {
           <Button
             variant="primary"
             size="lg"
-            onClick={() => { window.location.href = '/register'; }}
+            onClick={() => { window.location.href = '/inscription'; }}
           >
             Créer un compte gratuit
           </Button>

@@ -7,6 +7,7 @@ import ErrorMessage from '../components/common/ErrorMessage';
 import Button from '../components/common/Button';
 import CommentList from '../components/comment/CommentList';
 import CommentForm from '../components/comment/CommentForm';
+import LikeDislike from '../components/like/LikeDislike';
 import { articleService } from '../services/articleService';
 import { commentService } from '../services/commentService';
 import { formatDateLong } from '../utils/formatters';
@@ -259,19 +260,16 @@ function ArticleDetail() {
             </div>
             
             <footer className="article-detail__footer">
-              <div className="article-detail__stats">
-                <span className="article-detail__stat">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
-                  </svg>
-                  {article.likesCount || 0} j'aime
-                </span>
-                <span className="article-detail__stat">
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                  </svg>
-                  {comments.length} commentaires
-                </span>
+              <LikeDislike
+                articleId={article.id}
+                initialLikes={article.likesCount}
+                initialDislikes={article.dislikesCount}
+              />
+              <div className="article-detail__stat">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                </svg>
+                {comments.length} commentaires
               </div>
             </footer>
             

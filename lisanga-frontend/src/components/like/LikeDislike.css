@@ -1,0 +1,67 @@
+.like-dislike {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.like-dislike__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-bg-secondary);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.like-dislike__btn:hover:not(:disabled) {
+  background-color: var(--color-bg-tertiary);
+}
+
+.like-dislike__btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.like-dislike__btn--like:hover:not(:disabled) {
+  border-color: var(--color-success);
+  color: var(--color-success);
+}
+
+.like-dislike__btn--like.like-dislike__btn--active {
+  background-color: var(--color-success-light);
+  border-color: var(--color-success);
+  color: var(--color-success);
+}
+
+.like-dislike__btn--dislike:hover:not(:disabled) {
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+
+.like-dislike__btn--dislike.like-dislike__btn--active {
+  background-color: var(--color-error-light);
+  border-color: var(--color-error);
+  color: var(--color-error);
+}
+
+.like-dislike__count {
+  min-width: 1.5em;
+  text-align: center;
+}
+
+@media (max-width: 640px) {
+  .like-dislike__btn {
+    padding: var(--space-xs) var(--space-sm);
+  }
+  
+  .like-dislike__btn svg {
+    width: 16px;
+    height: 16px;
+  }
+}

@@ -69,7 +69,7 @@ Le projet utilise un design system strict avec :
 | **Authentification** | ✅ Terminé | 6/6 |
 | **Article** | ✅ Terminé | 4/4 |
 | **Commentaire** | ✅ Terminé | 2/2 |
-| **Like/Dislike** | ⏳ En attente | 0/1 |
+| **Like/Dislike** | ✅ Terminé | 1/1 |
 | **Recherche/Filtres** | ⏳ En attente | 0/3 |
 | **Admin Dashboard** | ⏳ En attente | 0/4 |
 | **Profil Utilisateur** | ⏳ En attente | 0/3 |
@@ -106,10 +106,10 @@ Le projet utilise un design system strict avec :
 
 ---
 
-### ⏳ Module Like/Dislike - EN ATTENTE
+### ✅ Module Like/Dislike - TERMINÉ
 
-**Tâches à réaliser (1/1):**
-- ⏳ Tâche 13 : Système de vote binaire (1 vote par article, modifiable)
+**Tâches réalisées (1/1):**
+- ✅ Tâche 13 : Système de vote binaire (1 vote par article, modifiable)
 
 ---
 
@@ -166,13 +166,16 @@ src/components/
 │   ├── CommentList.css     ✅
 │   ├── CommentForm.jsx     ✅
 │   └── CommentForm.css     ✅
+├── like/
+│   ├── LikeDislike.jsx     ✅
+│   └── LikeDislike.css     ✅
 └── common/
     ├── ProtectedRoute.jsx  ✅
     ├── Navbar.jsx          ✅
     └── Navbar.css         ✅
 
 src/services/
-├── articleService.js    ✅ (commentService ajouté)
+├── articleService.js    ✅ (like/dislike ajouté)
 └── commentService.js    ✅ (nouveau)
 
 src/context/
@@ -192,7 +195,7 @@ src/pages/
 
 1. ~~Module Article~~ (Tâches 7-10) - ✅ TERMINÉ
 2. ~~Module Commentaire~~ (Tâches 11-12) - ✅ TERMINÉ
-3. **Module Like/Dislike** (Tâche 13) - Dépend du module Article
+3. ~~Module Like/Dislike~~ (Tâche 13) - ✅ TERMINÉ
 4. **Module Recherche/Filtres** (Tâches 14-16) - Indépendant
 5. **Module Admin Dashboard** (Tâches 17-20) - Nécessite auth admin
 6. **Module Profil** (Tâches 21-23) - Dépend de auth
