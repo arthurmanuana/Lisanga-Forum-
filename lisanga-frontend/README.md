@@ -110,7 +110,7 @@ Le projet utilise un design system strict avec :
 
 **Tâches réalisées (1/1):**
 - ✅ Tâche 13 : Système de vote binaire (1 vote par article, modifiable)
-
+ 
 ---
 
 ### ⏳ Module Recherche/Filtres - EN ATTENTE
@@ -229,6 +229,12 @@ VITE_USE_MOCK=true
   - Titre article : 10-200 caractères
   - Contenu article : 100-10000 caractères
   - Commentaire : 1-1000 caractères
+
+###  Guides Additionnels
+
+- **[projet.md](./projet.md)** - Documentation complète du projet (composants, architecture, fonctionnalités)
+- **[backend.md](./backend.md)** - Guide d'intégration backend (contrats API, schéma DB, sécurité)
+- **[tache.md](./tache.md)** - Guide détaillé pour réaliser les tâches restantes
 
 ##  Migration vers API Réelle
 
