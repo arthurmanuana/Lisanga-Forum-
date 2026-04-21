@@ -87,43 +87,46 @@ Le projet utilise un design system strict avec :
   - Vérifie `isAuthenticated` depuis AuthContext
   - Affiche Loader pendant loading
   - Redirige vers /connexion si non connecté
-- ⏳ Tâche 5 : Connecter Navbar à AuthContext
-  - Afficher avatar + nom + "Déconnexion" si connecté
-  - Afficher "Connexion" + "Inscription" si non connecté
-  - Dropdown menu pour le profil utilisateur
+- ✅ Tâche 5 : Connecter Navbar à AuthContext
+  - Affiche avatar + nom + "Déconnexion" si connecté
+  - Affiche "Connexion" + "Inscription" si non connecté
+  - Dropdown menu pour le profil utilisateur (desktop et mobile)
 - ✅ Tâche 6 : Mettre à jour le Router (`src/router.jsx`)
   - Routes /connexion et /inscription (français)
   - Routes protégées /admin et /creer-article via ProtectedRoute
 
-### 🔄 Pour Reprendre le Travail
+###  Module Authentification - TERMINÉ
 
-Si vous devez reprendre ce projet après une pause :
+Toutes les tâches du module authentification sont terminées :
+- ✅ Tâches 1-6 : Login, Register, AuthContext, ProtectedRoute, Navbar, Router
 
-1. **Lire cette section** du README pour comprendre où nous en étions
-2. **Continuer à la Tâche 3** : améliorer `AuthContext.checkAuth` dans `src/context/AuthContext.jsx`
-3. **Ordre recommandé** : Tâche 3 → Tâche 4 → Tâche 5 → Tâche 6
-4. **Tester** : Après la Tâche 6, lancer `npm run dev` et vérifier :
-   - /connexion → formulaire Login fonctionnel
-   - /inscription → formulaire Register fonctionnel
-   - Navbar affiche les boutons ou le profil selon l'état d'authentification
+###  Prochaines Étapes
+
+**Module Article (Création & Affichage)**
+- Tâche 7 : Page Liste Articles (`/articles`)
+- Tâche 8 : Page Détail Article (`/articles/:id`)
+- Tâche 9 : Page Créer Article (`/creer-article`)
+- Tâche 10 : Page Modifier Article (`/articles/:id/edit`)
 
 ###  Fichiers Modifiés/Créés
 
 ```
 src/pages/
-├── Login.jsx      ✅ (nouveau)
-├── Login.css      ✅ (nouveau)
-├── Register.jsx   ✅ (nouveau)
-└── Register.css   ✅ (nouveau)
+├── Login.jsx      ✅
+├── Login.css      ✅
+├── Register.jsx   ✅
+└── Register.css   ✅
 
 src/context/
-└── AuthContext.jsx   ⏳ (à modifier - Tâche 3)
+└── AuthContext.jsx   ✅
 
 src/components/common/
-└── ProtectedRoute.jsx   ⏳ (nouveau - Tâche 4)
-└── Navbar.jsx           ⏳ (à modifier - Tâche 5)
+├── ProtectedRoute.jsx   ✅ (nouveau)
+├── Navbar.jsx           ✅
+├── Navbar.css          ✅
+└── Navbar.css          ✅
 
-src/router.jsx   ⏳ (à modifier - Tâche 6)
+src/router.jsx   ✅
 ```
 
 ---
