@@ -83,17 +83,17 @@ Le projet utilise un design system strict avec :
   - Appelle `authService.getProfile()` au rechargement pour restaurer `user`
   - Gestion redirection intelligente via `sessionStorage.redirect_url`
   - Nettoyage automatique si token invalide/expiré
-- ⏳ Tâche 4 : Créer `ProtectedRoute` (`src/components/common/ProtectedRoute.jsx`)
-  - Vérifier `isAuthenticated` depuis AuthContext
-  - Afficher Loader pendant loading
-  - Rediriger vers /connexion si non connecté
+- ✅ Tâche 4 : Créer `ProtectedRoute` (`src/components/common/ProtectedRoute.jsx`)
+  - Vérifie `isAuthenticated` depuis AuthContext
+  - Affiche Loader pendant loading
+  - Redirige vers /connexion si non connecté
 - ⏳ Tâche 5 : Connecter Navbar à AuthContext
   - Afficher avatar + nom + "Déconnexion" si connecté
   - Afficher "Connexion" + "Inscription" si non connecté
   - Dropdown menu pour le profil utilisateur
-- ⏳ Tâche 6 : Mettre à jour le Router (`src/router.jsx`)
-  - Ajouter routes /connexion et /inscription
-  - Préparer routes protégées /admin et /creer-article via ProtectedRoute
+- ✅ Tâche 6 : Mettre à jour le Router (`src/router.jsx`)
+  - Routes /connexion et /inscription (français)
+  - Routes protégées /admin et /creer-article via ProtectedRoute
 
 ### 🔄 Pour Reprendre le Travail
 
