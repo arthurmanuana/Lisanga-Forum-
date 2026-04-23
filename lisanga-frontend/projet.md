@@ -401,7 +401,7 @@ contenu: 1-1000 caractères
 | Like/Dislike | ✅ Terminé | 1/1 |
 | Recherche/Filtres | ✅ Terminé | 3/3 |
 | Admin Dashboard | ⏳ En attente | 4/4 |
-| Profil Utilisateur | ⏳ En attente | 3/3 |
+| Profil Utilisateur | ✅ Terminé | 3/3 |
 
 ---
 

@@ -2,11 +2,10 @@
 
 ## Vue d'Ensemble
 
-Il reste **10 tâches** à implémenter, organisées en 3 modules :
+Il reste **7 tâches** à implémenter, organisées en 2 modules :
 
 | Module | Tâches | Description |
 |--------|--------|-------------|
-| **Recherche/Filtres** | 14-16 | Filtres catégories, tri, recherche |
 | **Admin Dashboard** | 17-20 | Dashboard admin avec stats et modération |
 | **Profil Utilisateur** | 21-23 | Page profil et historique |
 
@@ -131,6 +130,37 @@ const handleSearch = (query) => {
   }
 };
 ```
+
+---
+
+## Module Profil Utilisateur (Tâches 21-23) - ✅ Terminée
+
+### Note Importante
+
+Le module Profil Utilisateur a été entièrement implémenté :
+- `Profile.jsx` : Page profil avec onglets (Informations, Mes Articles, Mes Commentaires)
+- `Profile.css` : Styles responsives pour la page profil
+- `userService.js` : Service API pour les opérations utilisateur
+- Route `/profil` ajoutée dans `router.jsx`
+- Lien profil déjà présent dans `Navbar.jsx`
+
+### Fonctionnalités Implémentées
+
+**Tâche 21 : Page Profil (`/profil`)**
+- ✅ Création de `Profile.jsx` et `Profile.css`
+- ✅ Route protégée ajoutée dans `router.jsx`
+- ✅ Structure avec onglets et avatar utilisateur
+
+**Tâche 22 : Modification Informations Utilisateur**
+- ✅ Composant `ProfileInfo` avec mode édition/affichage
+- ✅ Formulaire de modification du profil (username, email, avatar)
+- ✅ Gestion des états de chargement et messages de succès/erreur
+
+**Tâche 23 : Historique des Articles/Commentaires**
+- ✅ `userService.js` créé avec méthodes `getUserArticles`, `getUserComments`, `updateProfile`
+- ✅ Composant `ProfileArticles` affichant les articles de l'utilisateur
+- ✅ Composant `ProfileComments` affichant les commentaires de l'utilisateur
+- ✅ Support mock et API réelle
 
 ---
 

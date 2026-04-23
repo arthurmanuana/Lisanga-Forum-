@@ -72,7 +72,7 @@ Le projet utilise un design system strict avec :
 | **Like/Dislike** | ✅ Terminé | 1/1 |
 | **Recherche/Filtres** | ✅ Terminé | 3/3 |
 | **Admin Dashboard** | ⏳ En attente | 0/4 |
-| **Profil Utilisateur** | ⏳ En attente | 0/3 |
+| **Profil Utilisateur** | ✅ Terminé | 3/3 |
 
 ---
 
@@ -132,7 +132,7 @@ Le projet utilise un design system strict avec :
 
 ---
 
-### ⏳ Module Profil Utilisateur - EN ATTENTE
+### ✅ Module Profil Utilisateur - TERMINÉ
 
 **Tâches à réaliser (3/3):**
 - ⏳ Tâche 21 : Page Profil (`/profil`)
