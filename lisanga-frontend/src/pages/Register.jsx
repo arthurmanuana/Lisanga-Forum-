@@ -110,7 +110,7 @@ function Register() {
       await register(formData.username, formData.email, formData.password);
       
       // Redirect to login page with success message
-      navigate('/login', { 
+      navigate('/connexion', { 
         state: { 
           message: 'Inscription réussie ! Vous pouvez maintenant vous connecter.' 
         } 

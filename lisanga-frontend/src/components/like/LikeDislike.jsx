@@ -9,32 +9,63 @@ function LikeDislike({ articleId, initialLikes, initialDislikes, onVoteUpdate })
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const vote = articleService.getUserVote(articleId);
-    setUserVote(vote);
-  }, [articleId]);
+    setLikesCount(initialLikes || 0);
+    setDislikesCount(initialDislikes || 0);
+  }, [initialLikes, initialDislikes]);
+
+  useEffect(() => {
+    let active = true;
+
+    const loadReactions = async () => {
+      try {
+        const [counts, vote] = await Promise.all([
+          articleService.getReactionCounts(articleId),
+          articleService.getUserVote(articleId),
+        ]);
+
+        if (!active) return;
+
+        const nextLikes = Number(counts?.likes ?? 0);
+        const nextDislikes = Number(counts?.dislikes ?? 0);
+        setLikesCount(nextLikes);
+        setDislikesCount(nextDislikes);
+        setUserVote(vote);
+        onVoteUpdate?.({ likes: nextLikes, dislikes: nextDislikes });
+      } catch (err) {
+        console.error('Erreur chargement réactions:', err);
+      }
+    };
+
+    if (articleId) {
+      loadReactions();
+    }
+
+    return () => {
+      active = false;
+    };
+  }, [articleId, onVoteUpdate]);
+
+  const applyCounts = (counts) => {
+    const nextLikes = Number(counts?.likes ?? likesCount);
+    const nextDislikes = Number(counts?.dislikes ?? dislikesCount);
+    setLikesCount(nextLikes);
+    setDislikesCount(nextDislikes);
+    onVoteUpdate?.({ likes: nextLikes, dislikes: nextDislikes });
+  };
 
   const handleLike = async () => {
     if (isLoading) return;
     
     setIsLoading(true);
     try {
-      const previousVote = userVote;
-      const result = await articleService.likeArticle(articleId);
-      
-      if (result.action === 'removed') {
+      if (userVote === 'like') {
+        const result = await articleService.removeReaction(articleId);
         setUserVote(null);
-        setLikesCount(prev => prev - 1);
-        onVoteUpdate?.({ likes: likesCount - 1, dislikes: dislikesCount });
+        applyCounts(result?.counts);
       } else {
+        const result = await articleService.likeArticle(articleId);
         setUserVote('like');
-        if (previousVote === 'dislike') {
-          setDislikesCount(prev => prev - 1);
-          setLikesCount(prev => prev + 1);
-          onVoteUpdate?.({ likes: likesCount + 1, dislikes: dislikesCount - 1 });
-        } else {
-          setLikesCount(prev => prev + 1);
-          onVoteUpdate?.({ likes: likesCount + 1, dislikes: dislikesCount });
-        }
+        applyCounts(result?.counts);
       }
     } catch (err) {
       console.error('Erreur lors du like:', err);
@@ -48,23 +79,14 @@ function LikeDislike({ articleId, initialLikes, initialDislikes, onVoteUpdate })
     
     setIsLoading(true);
     try {
-      const previousVote = userVote;
-      const result = await articleService.dislikeArticle(articleId);
-      
-      if (result.action === 'removed') {
+      if (userVote === 'dislike') {
+        const result = await articleService.removeReaction(articleId);
         setUserVote(null);
-        setDislikesCount(prev => prev - 1);
-        onVoteUpdate?.({ likes: likesCount, dislikes: dislikesCount - 1 });
+        applyCounts(result?.counts);
       } else {
+        const result = await articleService.dislikeArticle(articleId);
         setUserVote('dislike');
-        if (previousVote === 'like') {
-          setLikesCount(prev => prev - 1);
-          setDislikesCount(prev => prev + 1);
-          onVoteUpdate?.({ likes: likesCount - 1, dislikes: dislikesCount + 1 });
-        } else {
-          setDislikesCount(prev => prev + 1);
-          onVoteUpdate?.({ likes: likesCount, dislikes: dislikesCount + 1 });
-        }
+        applyCounts(result?.counts);
       }
     } catch (err) {
       console.error('Erreur lors du dislike:', err);

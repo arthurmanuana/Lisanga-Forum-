@@ -172,6 +172,7 @@ function ProfileInfo({ user }) {
 function ProfileArticles({ userId }) {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
     const loadArticles = async () => {
@@ -200,6 +201,21 @@ function ProfileArticles({ userId }) {
     );
   }
 
+  const handleDeleteArticle = async (articleId) => {
+    const confirmed = window.confirm('Êtes-vous sûr de vouloir supprimer cet article ?');
+    if (!confirmed) return;
+
+    try {
+      setDeletingId(articleId);
+      await articleService.deleteArticle(articleId);
+      setArticles((prev) => prev.filter((article) => article.id !== articleId));
+    } catch (err) {
+      console.error('Erreur suppression article:', err);
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   return (
     <div className="profile-articles">
       {articles.map(article => (
@@ -212,6 +228,23 @@ function ProfileArticles({ userId }) {
             <span>{formatDate(article.createdAt)}</span>
             <span>{article.likesCount} likes</span>
             <span>{article.commentsCount} commentaires</span>
+          </div>
+          <div className="profile-article-actions">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => window.location.href = `/articles/${article.id}/edit`}
+            >
+              Modifier
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={deletingId === article.id}
+              onClick={() => handleDeleteArticle(article.id)}
+            >
+              {deletingId === article.id ? 'Suppression...' : 'Supprimer'}
+            </Button>
           </div>
         </div>
       ))}
@@ -256,7 +289,7 @@ function ProfileComments({ userId }) {
             <a href={`/articles/${comment.articleId}`}>
               Voir l'article
             </a>
-            <span>{formatters.formatDate(comment.createdAt)}</span>
+            <span>{formatDate(comment.createdAt)}</span>
           </div>
         </div>
       ))}

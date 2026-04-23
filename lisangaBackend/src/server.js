@@ -62,9 +62,9 @@ app.use('/api/admin', adminRoutes);        // Dashboard admin
 app.use('/api/categories', categorieRoutes);
 app.use('/api/articles', articleRoutes);
 app.use('/api/commentaires', commentaireRoutes);
-app.use('/api/admin', adminRoutes); // Routes admin protégées
-app.use('/uploads', express.static(join(__dirname, 'uploads')));
-// ... (routes admin & articles à venir)
+app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
+
+
 
 app.use((req, res) => {
   res.status(404).json({

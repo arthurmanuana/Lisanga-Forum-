@@ -14,6 +14,34 @@ import { formatDateLong } from '../utils/formatters';
 import { useAuth } from '../hooks/useAuth';
 import './ArticleDetail.css';
 
+const countCommentsTree = (items = []) =>
+  items.reduce((total, item) => total + 1 + countCommentsTree(item.replies || []), 0);
+
+const removeCommentFromTree = (items = [], commentId) => {
+  let removedCount = 0;
+
+  const updatedItems = items.reduce((acc, item) => {
+    if (item.id === commentId) {
+      removedCount += 1 + countCommentsTree(item.replies || []);
+      return acc;
+    }
+
+    const { updatedItems: updatedReplies, removedCount: removedInReplies } = removeCommentFromTree(
+      item.replies || [],
+      commentId
+    );
+
+    removedCount += removedInReplies;
+    acc.push({
+      ...item,
+      replies: updatedReplies,
+    });
+    return acc;
+  }, []);
+
+  return { updatedItems, removedCount };
+};
+
 function ArticleDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -24,6 +52,7 @@ function ArticleDetail() {
   const [error, setError] = useState(null);
   
   const [comments, setComments] = useState([]);
+  const [commentsCount, setCommentsCount] = useState(0);
   const [loadingComments, setLoadingComments] = useState(false);
   const [submittingComment, setSubmittingComment] = useState(false);
   const [replyingTo, setReplyingTo] = useState(null);
@@ -35,6 +64,7 @@ function ArticleDetail() {
         setError(null);
         const response = await articleService.getArticleById(id);
         setArticle(response.article);
+        setCommentsCount(response.article?.commentsCount || 0);
       } catch (err) {
         setError(err.message || 'Erreur lors du chargement de l\'article');
       } finally {
@@ -55,6 +85,7 @@ function ArticleDetail() {
         setLoadingComments(true);
         const response = await commentService.getCommentsByArticle(id);
         setComments(response.comments);
+        setCommentsCount(countCommentsTree(response.comments));
       } catch (err) {
         console.error('Erreur lors du chargement des commentaires:', err);
       } finally {
@@ -91,6 +122,7 @@ function ArticleDetail() {
       setSubmittingComment(true);
       const response = await commentService.addComment(id, content);
       setComments(prev => [...prev, response.comment]);
+      setCommentsCount((prev) => prev + 1);
     } catch (err) {
       console.error('Erreur lors de l\'ajout du commentaire:', err);
     } finally {
@@ -125,6 +157,7 @@ function ArticleDetail() {
         }
         return comment;
       }));
+      setCommentsCount((prev) => prev + 1);
       
       setReplyingTo(null);
     } catch (err) {
@@ -138,7 +171,13 @@ function ArticleDetail() {
     if (window.confirm('Êtes-vous sûr de vouloir supprimer ce commentaire ?')) {
       try {
         await commentService.deleteComment(commentId);
-        setComments(prev => prev.filter(c => c.id !== commentId));
+        setComments((prev) => {
+          const { updatedItems, removedCount } = removeCommentFromTree(prev, commentId);
+          if (removedCount > 0) {
+            setCommentsCount((current) => Math.max(0, current - removedCount));
+          }
+          return updatedItems;
+        });
       } catch (err) {
         console.error('Erreur lors de la suppression du commentaire:', err);
       }
@@ -269,7 +308,7 @@ function ArticleDetail() {
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
                 </svg>
-                {comments.length} commentaires
+                {commentsCount} commentaires
               </div>
             </footer>
             

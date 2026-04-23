@@ -29,8 +29,17 @@ export const adminService = {
         }
       };
     }
-    
-    return api.get('/admin/stats');
+
+    const response = await api.get('/admin/stats');
+    const raw = response?.stats || {};
+    return {
+      stats: {
+        totalUsers: raw.users ?? 0,
+        totalArticles: raw.articles ?? 0,
+        totalComments: raw.comments ?? 0,
+        totalLikes: raw.reactions ?? 0,
+      },
+    };
   },
 
   // ===== ARTICLES =====
@@ -51,7 +60,29 @@ export const adminService = {
       };
     }
     
-    return api.get(`/admin/articles?page=${page}&limit=${limit}`);
+    const response = await api.get(`/articles/with-author?page=${page}&limit=${limit}`);
+    const rows = response?.data || [];
+
+    const articles = rows.map((a) => ({
+      id: a.id_article,
+      title: a.titre,
+      category: a.nom_categorie,
+      createdAt: a.date_publication || a.created_at,
+      author: {
+        id: a.id_utilisateur,
+        username: a.nom_utilisateur || [a.prenom, a.nom].filter(Boolean).join(' ').trim(),
+      },
+    }));
+
+    const rawPagination = response?.pagination || {};
+    return {
+      articles,
+      pagination: {
+        currentPage: rawPagination.page ?? page,
+        totalPages: rawPagination.totalPages ?? 1,
+        totalArticles: rawPagination.total ?? articles.length,
+      },
+    };
   },
 
   deleteArticle: async (articleId) => {
@@ -60,7 +91,7 @@ export const adminService = {
       return { message: 'Article supprimé avec succès' };
     }
     
-    return api.delete(`/admin/articles/${articleId}`);
+    return api.delete(`/articles/${articleId}`);
   },
 
   // ===== UTILISATEURS =====
@@ -90,7 +121,7 @@ export const adminService = {
       return { message: 'Utilisateur banni avec succès' };
     }
     
-    return api.post(`/admin/users/${userId}/ban`);
+    throw new Error("Le bannissement n'est pas encore disponible sur l'API");
   },
 
   unbanUser: async (userId) => {
@@ -99,7 +130,7 @@ export const adminService = {
       return { message: 'Utilisateur débanni avec succès' };
     }
     
-    return api.post(`/admin/users/${userId}/unban`);
+    throw new Error("Le débannissement n'est pas encore disponible sur l'API");
   },
 
   // ===== CATÉGORIES =====
@@ -109,7 +140,16 @@ export const adminService = {
       return { categories: mockCategories };
     }
     
-    return api.get('/admin/categories');
+    const response = await api.get('/categories');
+    const rows = response?.data || [];
+    return {
+      categories: rows.map((c) => ({
+        id: c.id_categorie,
+        name: c.nom,
+        slug: c.nom?.toLowerCase()?.replace(/\s+/g, '-') || '',
+        description: c.description || '',
+      })),
+    };
   },
 
   addCategory: async (data) => {
@@ -135,7 +175,20 @@ export const adminService = {
       return { category: newCategory, message: 'Catégorie ajoutée avec succès' };
     }
     
-    return api.post('/admin/categories', data);
+    const response = await api.post('/categories', {
+      nom: data.name,
+      description: data.description || null,
+    });
+    const c = response?.data;
+    return {
+      category: {
+        id: c.id_categorie,
+        name: c.nom,
+        slug: c.nom?.toLowerCase()?.replace(/\s+/g, '-') || '',
+        description: c.description || '',
+      },
+      message: response?.message || 'Catégorie ajoutée avec succès',
+    };
   },
 
   updateCategory: async (categoryId, data) => {
@@ -150,7 +203,20 @@ export const adminService = {
       throw new Error('Catégorie non trouvée');
     }
     
-    return api.put(`/admin/categories/${categoryId}`, data);
+    const response = await api.put(`/categories/${categoryId}`, {
+      nom: data.name,
+      description: data.description || null,
+    });
+    const c = response?.data;
+    return {
+      category: {
+        id: c.id_categorie,
+        name: c.nom,
+        slug: c.nom?.toLowerCase()?.replace(/\s+/g, '-') || '',
+        description: c.description || '',
+      },
+      message: response?.message || 'Catégorie mise à jour',
+    };
   },
 
   deleteCategory: async (categoryId) => {
@@ -161,6 +227,6 @@ export const adminService = {
       return { message: 'Catégorie supprimée avec succès' };
     }
     
-    return api.delete(`/admin/categories/${categoryId}`);
+    return api.delete(`/categories/${categoryId}`);
   }
 };

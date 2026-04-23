@@ -19,6 +19,7 @@ router.use(authorizeRoles('admin'));
 
 // Stats enrichies
 router.get('/stats', adminController.getStats);
+router.get('/users', adminController.getUsers);
 
 // CRUD Categories
 router.get('/categories', adminController.getCategories);

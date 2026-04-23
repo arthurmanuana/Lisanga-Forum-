@@ -1,6 +1,23 @@
 import { api, isMockMode } from './api';
 import { delay, mockUsers } from './mockData';
 
+const mapBackendUser = (user) => {
+  if (!user) return null;
+
+  return {
+    id: user.id ?? user.id_utilisateurs ?? null,
+    username:
+      user.username ??
+      user.nom_utilisateur ??
+      [user.prenom, user.nom].filter(Boolean).join(' ').trim() ??
+      '',
+    email: user.email ?? '',
+    role: user.role ?? 'utilisateur',
+    avatarUrl: user.avatarUrl ?? user.photo ?? null,
+    createdAt: user.createdAt ?? user.created_at ?? null,
+  };
+};
+
 export const authService = {
   login: async (email, password) => {
     if (isMockMode()) {
@@ -15,18 +32,15 @@ export const authService = {
       return {
         accessToken: `mock_access_token_${user.id}_${Date.now()}`,
         refreshToken: `mock_refresh_token_${user.id}`,
-        user: {
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          role: user.role,
-          avatarUrl: user.avatarUrl,
-          createdAt: user.createdAt
-        }
+        user: mapBackendUser(user)
       };
     }
     
-    return api.post('/auth/login', { email, password });
+    const response = await api.post('/auth/login', { email, mot_de_passe: password });
+    return {
+      ...response,
+      user: mapBackendUser(response?.user),
+    };
   },
   
   register: async (username, email, password) => {
@@ -47,7 +61,13 @@ export const authService = {
       };
     }
     
-    return api.post('/auth/register', { username, email, password });
+    return api.post('/auth/register', {
+      nom: username,
+      prenom: 'Utilisateur',
+      nom_utilisateur: username,
+      email,
+      mot_de_passe: password
+    });
   },
   
   logout: async () => {
@@ -76,9 +96,13 @@ export const authService = {
   getProfile: async () => {
     if (isMockMode()) {
       await delay();
-      return { user: mockUsers[0] };
+      return { user: mapBackendUser(mockUsers[0]) };
     }
     
-    return api.get('/auth/profile');
+    const response = await api.get('/users/me');
+    return {
+      ...response,
+      user: mapBackendUser(response?.user),
+    };
   }
 };

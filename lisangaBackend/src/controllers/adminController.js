@@ -8,7 +8,7 @@
 import { pool } from '../db/pool.js';
 
 // ============================================================================
-// HELPERS STANDARDISÉS (Conformes au PDF)
+// ⚙️ HELPERS STANDARDISÉS (Conformes au PDF)
 // ============================================================================
 
 /**
@@ -24,7 +24,7 @@ const respondSuccess = (res, status, data = {}, message = 'Opération réussie')
   res.status(status).json({ data, message });
 
 // ============================================================================
-// GET /api/admin/stats - Statistiques enrichies
+// 📈 GET /api/admin/stats - Statistiques enrichies
 // ============================================================================
 
 export const getStats = async (req, res) => {
@@ -92,7 +92,7 @@ export const getStats = async (req, res) => {
 };
 
 // ============================================================================
-// GET /api/admin/categories - Lister les catégories
+// 📂 GET /api/admin/categories - Lister les catégories
 // ============================================================================
 
 export const getCategories = async (req, res) => {
@@ -108,7 +108,7 @@ export const getCategories = async (req, res) => {
 };
 
 // ============================================================================
-// POST /api/admin/categories - Créer une catégorie
+// ➕ POST /api/admin/categories - Créer une catégorie
 // ============================================================================
 
 export const createCategory = async (req, res) => {
@@ -139,7 +139,7 @@ export const createCategory = async (req, res) => {
 };
 
 // ============================================================================
-// PUT /api/admin/categories/:id - Modifier une catégorie
+// ✏️ PUT /api/admin/categories/:id - Modifier une catégorie
 // ============================================================================
 
 export const updateCategory = async (req, res) => {
@@ -178,22 +178,24 @@ export const updateCategory = async (req, res) => {
     const result = await pool.query(query, values);
     
     if (result.rows.length === 0) {
-        return respondError(res, 404, 'CATEGORY_NOT_FOUND', 'Catégorie non trouvée');
-      }
-      respondSuccess(res, 200, { category: result.rows[0] }, 'Catégorie mise à jour');
-      
-    } catch (err) {
-      // Gestion des erreurs PostgreSQL dans le catch
-      if (err.code === '23505') { // unique_violation
+      return respondError(res, 404, 'CATEGORY_NOT_FOUND', 'Catégorie non trouvée');
+    }
+
+
+
+    respondSuccess(res, 200, { category: result.rows[0] }, 'Catégorie mise à jour');
+  } catch (err) {
+
+    if (err.code === '23505') {
         return respondError(res, 409, 'CATEGORY_ALREADY_EXISTS', 'Ce nom de catégorie est déjà utilisé');
       }
-      console.error('[Admin] Erreur updateCategory:', err.message);
-      respondError(res, 500, 'SERVER_ERROR', 'Erreur lors de la mise à jour');
-    }
-  };
+    console.error('[Admin] Erreur updateCategory:', err.message);
+    respondError(res, 500, 'SERVER_ERROR', 'Erreur lors de la mise à jour de la catégorie');
+  }
+};
 
 // ============================================================================
-// DELETE /api/admin/categories/:id - Supprimer une catégorie
+// ❌ DELETE /api/admin/categories/:id - Supprimer une catégorie
 // ============================================================================
 
 export const deleteCategory = async (req, res) => {
