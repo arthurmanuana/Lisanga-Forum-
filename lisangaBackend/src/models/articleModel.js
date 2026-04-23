@@ -1,11 +1,30 @@
 import {pool} from '../db/pool.js';
 
 export const ArticleModel = {
-    async getAllArticles (){
+    async getAllArticles({ page = 1, limit = 10 } = {}) {
         try {
-            const {rows} = await pool.query('SELECT * FROM articles ORDER BY date_publication DESC');
-            return rows;
-        } catch(error){
+            const offset = (page - 1) * limit;
+            const { rows } = await pool.query(
+                `SELECT * FROM articles 
+                 ORDER BY date_publication DESC 
+                 LIMIT $1 OFFSET $2`,
+                [limit, offset]
+            );
+
+            const { rows: countRows } = await pool.query(
+                'SELECT COUNT(*)::int AS total FROM articles'
+            );
+
+            return {
+                data: rows,
+                pagination: {
+                    page,
+                    limit,
+                    total: countRows[0].total,
+                    totalPages: Math.ceil(countRows[0].total / limit),
+                },
+            };
+        } catch (error) {
             console.error('Erreur lors de la récupération des articles : ', error);
             throw error;
         }
@@ -35,21 +54,6 @@ export const ArticleModel = {
         }
     },
 
-    async updateArticle({id_article, id_categorie, titre, contenu, photo}){
-        try {
-            const {rows} = await pool.query(
-                `UPDATE articles 
-                 SET id_categorie = $1, titre = $2, contenu = $3, photo = $4, updated_at = CURRENT_TIMESTAMP 
-                 WHERE id_article = $5 
-                 RETURNING *`,
-                [id_categorie, titre, contenu, photo, id_article]
-            );
-            return rows[0] || null;
-        } catch (error){
-            console.error(`Erreur lors de la mise à jour de l'article :`, error);
-            throw error;
-        }
-    },
     async deleteArticle({id_article}){
         try {
             const {rows} = await pool.query('DELETE FROM articles WHERE id_article = $1 RETURNING *', [id_article]);
@@ -71,9 +75,10 @@ export const ArticleModel = {
             throw error;
         }
     },
-    async getArticlesWithAuthor(){
+    async getArticlesWithAuthor({ page = 1, limit = 10 } = {}) {
         try {
-            const {rows} = await pool.query(
+            const offset = (page - 1) * limit;
+            const { rows } = await pool.query(
                 `SELECT a.*, 
                         u.nom, 
                         u.prenom, 
@@ -83,10 +88,25 @@ export const ArticleModel = {
                  FROM articles a
                  JOIN utilisateurs u ON a.id_utilisateur = u.id_utilisateurs
                  JOIN categories c ON a.id_categorie = c.id_categorie
-                 ORDER BY a.date_publication DESC`
+                 ORDER BY a.date_publication DESC
+                 LIMIT $1 OFFSET $2`,
+                [limit, offset]
             );
-            return rows;
-        } catch (error){
+
+            const { rows: countRows } = await pool.query(
+                'SELECT COUNT(*)::int AS total FROM articles'
+            );
+
+            return {
+                data: rows,
+                pagination: {
+                    page,
+                    limit,
+                    total: countRows[0].total,
+                    totalPages: Math.ceil(countRows[0].total / limit),
+                },
+            };
+        } catch (error) {
             console.error(`Erreur lors de la récupération des articles avec l'auteur :`, error);
             throw error;
         }
