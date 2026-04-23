@@ -4,6 +4,9 @@ import cookieParser from "cookie-parser";
 import { env } from "./config/env.js";
 import { pool } from "./db/pool.js";
 
+import authRoutes from './routes/authRoutes.js';
+import utilisateurRoutes from './routes/utilisateurRoutes.js';
+
 const app = express();
 
 app.use(
@@ -39,6 +42,12 @@ app.get("/api/health/db", async (req, res) => {
     });
   }
 });
+
+// 📍 Montage des routes API
+app.use('/api/auth', authRoutes);          // 🔓 Inscription / Connexion / Refresh
+app.use('/api/users', utilisateurRoutes);  // 🔒 Profil / Update / Password
+
+// ... (routes admin & articles à venir)
 
 app.use((req, res) => {
   res.status(404).json({
