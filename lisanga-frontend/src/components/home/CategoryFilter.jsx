@@ -1,12 +1,26 @@
-import { CATEGORIES } from '../../utils/constants';
 import './CategoryFilter.css';
 
-function CategoryFilter({ activeCategory, onCategoryChange, articlesCount, categoryCounts = {} }) {
+function CategoryFilter({
+  activeCategory,
+  onCategoryChange,
+  articlesCount,
+  categoryCounts = {},
+  categories = [],
+}) {
+  const dynamicCategories = [
+    { id: 'all', label: 'Tous', value: '' },
+    ...categories.map((category) => ({
+      id: String(category.id_categorie),
+      label: category.nom,
+      value: category.nom,
+    })),
+  ];
+
   return (
     <div className="category-filter">
       <div className="category-filter__container">
         <div className="category-filter__pills-wrapper" role="group" aria-label="Filtrer par catégorie">
-          {CATEGORIES.map(category => {
+          {dynamicCategories.map(category => {
             const isActive = activeCategory === category.value;
             const count = categoryCounts[category.value] ?? 0;
 

@@ -10,6 +10,7 @@ import Loader from '../components/common/Loader';
 import ErrorMessage from '../components/common/ErrorMessage';
 import Button from '../components/common/Button';
 import { articleService } from '../services/articleService';
+import { categorieService } from '../services/categorieService';
 import { SORT_OPTIONS, LOCAL_STORAGE_KEYS } from '../utils/constants';
 import './Home.css';
 
@@ -23,6 +24,7 @@ function Home() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pagination, setPagination] = useState(null);
   const [categoryCounts, setCategoryCounts] = useState({});
+  const [categories, setCategories] = useState([]);
   const [searchHistory, setSearchHistory] = useState(() => {
     try {
       return JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.searchHistory)) || [];
@@ -85,6 +87,15 @@ function Home() {
       setCategoryCounts({});
     }
   }, []);
+
+  const loadCategories = useCallback(async () => {
+    try {
+      const data = await categorieService.getCategories();
+      setCategories(data);
+    } catch {
+      setCategories([]);
+    }
+  }, []);
   
   useEffect(() => {
     loadArticles();
@@ -93,6 +104,10 @@ function Home() {
   useEffect(() => {
     loadCategoryCounts();
   }, [loadCategoryCounts]);
+
+  useEffect(() => {
+    loadCategories();
+  }, [loadCategories]);
   
   useEffect(() => {
     if (!debouncedSearch.trim()) {
@@ -170,6 +185,7 @@ function Home() {
               onCategoryChange={handleCategoryChange}
               articlesCount={pagination?.totalArticles}
               categoryCounts={categoryCounts}
+              categories={categories}
             />
             
             <div className="home-toolbar">

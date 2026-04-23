@@ -8,7 +8,6 @@ import Loader from '../components/common/Loader';
 import ErrorMessage from '../components/common/ErrorMessage';
 import { articleService } from '../services/articleService';
 import { validateArticleTitle, validateArticleContent, validateCategory, validateImage } from '../utils/validators';
-import { CATEGORIES } from '../utils/constants';
 import { categorieService } from '../services/categorieService';
 import './CreateArticle.css';
 
@@ -214,16 +213,9 @@ function CreateArticle() {
                 aria-invalid={touched.category && !!errors.category}
               >
                 <option value="">Sélectionnez une catégorie</option>
-                {(categories.length > 0
-                  ? categories.map((category) => ({
-                      id: category.id_categorie,
-                      value: String(category.id_categorie),
-                      label: category.nom,
-                    }))
-                  : CATEGORIES.filter((cat) => cat.value !== '')
-                ).map((category) => (
-                  <option key={category.id} value={category.value}>
-                    {category.label}
+                {categories.map((category) => (
+                  <option key={category.id_categorie} value={category.nom}>
+                    {category.nom}
                   </option>
                 ))}
               </select>
