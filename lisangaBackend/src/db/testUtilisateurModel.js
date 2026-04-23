@@ -11,7 +11,7 @@ const test = async () => {
   const result = await create({
     nom: 'Test',
     prenom: 'Utilisateur',
-    email: 'test@example.com',
+    email: 'test@lisanga.com',
     nom_utilisateur: 'testuser',
     mot_de_passe: hashed,
     sexe: 'M'
