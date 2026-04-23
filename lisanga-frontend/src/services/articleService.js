@@ -51,6 +51,20 @@ export const articleService = {
     return api.get(`/articles?${params.toString()}`);
   },
   
+  getCategoryCounts: async () => {
+    if (isMockMode()) {
+      await delay();
+
+      return mockArticles.reduce((counts, article) => {
+        counts[article.category] = (counts[article.category] || 0) + 1;
+        counts[''] = (counts[''] || 0) + 1;
+        return counts;
+      }, {});
+    }
+
+    return api.get('/articles/category-counts');
+  },
+  
   getArticleById: async (id) => {
     if (isMockMode()) {
       await delay();
