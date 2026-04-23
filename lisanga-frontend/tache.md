@@ -1,13 +1,13 @@
-# GUIDE DES TÂCHES RESTANTES - LISANGA FRONTEND
+# GUIDE DE SUIVI - LISANGA FRONTEND
 
 ## Vue d'Ensemble
 
-Il reste **7 tâches** à implémenter, organisées en 2 modules :
+Les modules prioritaires sont désormais implémentés côté frontend. Ce guide sert de référence et de validation :
 
 | Module | Tâches | Description |
 |--------|--------|-------------|
-| **Admin Dashboard** | 17-20 | Dashboard admin avec stats et modération |
-| **Profil Utilisateur** | 21-23 | Page profil et historique |
+| **Admin Dashboard** | 17-20 | ✅ Implémenté (stats, modération, utilisateurs, catégories) |
+| **Profil Utilisateur** | 21-23 | ✅ Implémenté (profil, édition, historique) |
 
 ---
 
@@ -164,16 +164,16 @@ Le module Profil Utilisateur a été entièrement implémenté :
 
 ---
 
-## Module Admin Dashboard (Tâches 17-20)
+## Module Admin Dashboard (Tâches 17-20) - ✅ Terminé
 
 ### Vue d'Ensemble
 
-Le dashboard admin nécessite :
+Le dashboard admin implémente :
 - Une page `/admin` protégée (réservée aux admins)
 - Un service admin pour les statistiques
 - Une interface de modération des articles
-- Une gestion des utilisateurs (bannissement)
-- Une gestion des categories predefinies (creation/suppression)
+- Une gestion des utilisateurs (bannissement/débannissement)
+- Une gestion des catégories prédéfinies (création/suppression/modification)
 
 ---
 
@@ -1149,7 +1149,7 @@ function ProfileComments({ userId }) {
 
 ---
 
-## Résumé des Fichiers à Créer
+## Résumé des Fichiers Créés
 
 | Module | Fichier | Description |
 |--------|---------|-------------|
@@ -1160,7 +1160,7 @@ function ProfileComments({ userId }) {
 | User | `Profile.css` | Styles profil |
 | User | `userService.js` | Service API utilisateur |
 
-## Résumé des Fichiers à Modifier
+## Résumé des Fichiers Modifiés
 
 | Fichier | Modification |
 |---------|--------------|
@@ -1169,13 +1169,13 @@ function ProfileComments({ userId }) {
 
 ---
 
-## Checklist Avant de Commencer
+## Checklist de Vérification
 
-- [ ] Lire attentivement ce guide
-- [ ] Vérifier les services mock existants
-- [ ] Préparer les routes API (si backend prêt)
-- [ ] Créer les fichiers dans l'ordre : Services → Composants → Pages
-- [ ] Tester chaque fonctionnalité après implémentation
+- [x] Dashboard admin fonctionnel sur `/admin`
+- [x] Accès admin visible dans la navbar (compte admin uniquement)
+- [x] Gestion des catégories admin (ajout/suppression/modification)
+- [x] Module profil connecté aux services utilisateur
+- [ ] Brancher le backend réel (`VITE_USE_MOCK=false`) quand API disponible
 
 ---
 
