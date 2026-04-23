@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import CreateArticle from './pages/CreateArticle';
 import EditArticle from './pages/EditArticle';
+import Profile from './pages/Profile';
 import ProtectedRoute from './components/common/ProtectedRoute';
 
 function AppRouter() {
@@ -31,6 +32,14 @@ function AppRouter() {
             element={
               <ProtectedRoute>
                 <EditArticle />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profil"
+            element={
+              <ProtectedRoute>
+                <Profile />
               </ProtectedRoute>
             }
           />
