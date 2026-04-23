@@ -129,6 +129,7 @@ Le projet utilise un design system strict avec :
 - ⏳ Tâche 18 : Statistiques et métriques
 - ⏳ Tâche 19 : Gestion des articles (modération)
 - ⏳ Tâche 20 : Gestion des utilisateurs (bannissement)
+- ⏳ Bonus : Gestion des categories predefinies par l'admin
 
 ---
 
@@ -224,11 +225,18 @@ VITE_USE_MOCK=true
 ##  Documentation
 
 - **Catégories** : Technologie, Business, Design, Communauté, Formation, Événement, Culture, Société
+- **Gouvernance des categories** : les categories de publication sont predefinies par l'administrateur depuis `/admin` (onglet `Categories`)
 - **Limites** : 
   - Images : 5 Mo max (JPG/PNG/WebP)
   - Titre article : 10-200 caractères
   - Contenu article : 100-10000 caractères
   - Commentaire : 1-1000 caractères
+
+##  Acces au Dashboard Admin
+
+1. Connectez-vous avec un compte ayant `role: "admin"` (mock par defaut : `admin@lisanga.com`)
+2. Ouvrez `/admin` directement dans le navigateur ou via le menu utilisateur (Desktop/Mobile)
+3. Si vous n'etes pas admin, l'application vous redirige automatiquement vers l'accueil
 
 ###  Guides Additionnels
 

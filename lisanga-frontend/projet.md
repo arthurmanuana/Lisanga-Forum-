@@ -403,6 +403,8 @@ contenu: 1-1000 caractères
 | Admin Dashboard | ⏳ En attente | 4/4 |
 | Profil Utilisateur | ✅ Terminé | 3/3 |
 
+Note: les categories disponibles pour publier un article sont predefinies par l'administrateur depuis le dashboard (`/admin`, onglet `Categories`).
+
 ---
 
 ## 11. Configuration
