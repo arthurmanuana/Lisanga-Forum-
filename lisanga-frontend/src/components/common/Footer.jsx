@@ -135,7 +135,7 @@ function Footer() {
       <div className="footer__bottom">
         <div className="footer__bottom-inner">
           <p className="footer__copyright">
-            &copy; {currentYear} Lisanga. Tous droits réservés.
+            &copy; {currentYear} M-Nuru Tech. Tous droits réservés.
           </p>
           <p className="footer__made-with">
             Fait avec passion pour la communauté.

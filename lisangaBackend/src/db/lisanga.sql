@@ -56,9 +56,18 @@ CREATE TABLE commentaires (
 ALTER TABLE commentaires 
 ADD COLUMN id_parent_commentaire INTEGER;
 
+ALTER TABLE commentaires 
+ADD CONSTRAINT fk_parent_commentaire 
 FOREIGN KEY (id_parent_commentaire) 
 REFERENCES commentaires(id_commentaire) 
 ON DELETE CASCADE;
+
+ALTER TABLE commentaires 
+ADD COLUMN is_deleted BOOLEAN NOT NULL DEFAULT FALSE;
+
+ALTER TABLE commentaires 
+ADD CONSTRAINT check_contenu_length 
+CHECK (LENGTH(contenu) <= 1000);
 
 CREATE TABLE reaction (
     id_reaction SERIAL PRIMARY KEY,

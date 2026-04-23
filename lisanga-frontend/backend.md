@@ -546,6 +546,29 @@ Authorization: Bearer <accessToken>
 **Notes :**
 - Accessible uniquement aux utilisateurs avec `role: "admin"`
 
+#### GET /api/admin/categories
+
+**Response (200) :**
+```json
+{
+  "categories": [
+    { "id": 1, "name": "Technologie", "slug": "technologie", "description": "..." }
+  ]
+}
+```
+
+#### POST /api/admin/categories
+
+Permet a l'admin de predefinir une categorie utilisable lors de la creation d'articles.
+
+#### PUT /api/admin/categories/:id
+
+Permet a l'admin de modifier une categorie predefinie (nom, slug, description).
+
+#### DELETE /api/admin/categories/:id
+
+Permet a l'admin de retirer une categorie predefinie.
+
 ---
 
 ## 5. Schéma de Base de Données
@@ -954,6 +977,10 @@ Une collection Postman est recommandée avec :
 
 - **Admin**
   - GET /api/admin/stats (admin only)
+  - GET /api/admin/categories (admin only)
+  - POST /api/admin/categories (admin only)
+  - PUT /api/admin/categories/:id (admin only)
+  - DELETE /api/admin/categories/:id (admin only)
 
 ---
 

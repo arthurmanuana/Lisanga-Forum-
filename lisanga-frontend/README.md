@@ -71,7 +71,7 @@ Le projet utilise un design system strict avec :
 | **Commentaire** | ✅ Terminé | 2/2 |
 | **Like/Dislike** | ✅ Terminé | 1/1 |
 | **Recherche/Filtres** | ✅ Terminé | 3/3 |
-| **Admin Dashboard** | ⏳ En attente | 0/4 |
+| **Admin Dashboard** | ✅ Terminé | 4/4 + catégories |
 | **Profil Utilisateur** | ✅ Terminé | 3/3 |
 
 ---
@@ -122,22 +122,23 @@ Le projet utilise un design system strict avec :
 
 ---
 
-### ⏳ Module Admin Dashboard - EN ATTENTE
+### ✅ Module Admin Dashboard - TERMINÉ
 
-**Tâches à réaliser (4/4):**
-- ⏳ Tâche 17 : Page Dashboard Admin (`/admin`)
-- ⏳ Tâche 18 : Statistiques et métriques
-- ⏳ Tâche 19 : Gestion des articles (modération)
-- ⏳ Tâche 20 : Gestion des utilisateurs (bannissement)
+**Tâches réalisées:**
+- ✅ Tâche 17 : Page Dashboard Admin (`/admin`)
+- ✅ Tâche 18 : Statistiques et métriques
+- ✅ Tâche 19 : Gestion des articles (modération)
+- ✅ Tâche 20 : Gestion des utilisateurs (bannissement)
+- ✅ Bonus : Gestion des catégories prédéfinies par l'admin (ajout, suppression, modification)
 
 ---
 
 ### ✅ Module Profil Utilisateur - TERMINÉ
 
-**Tâches à réaliser (3/3):**
-- ⏳ Tâche 21 : Page Profil (`/profil`)
-- ⏳ Tâche 22 : Modification informations utilisateur
-- ⏳ Tâche 23 : Historique des articles/commentaires
+**Tâches réalisées (3/3):**
+- ✅ Tâche 21 : Page Profil (`/profil`)
+- ✅ Tâche 22 : Modification informations utilisateur
+- ✅ Tâche 23 : Historique des articles/commentaires
 
 ---
 
@@ -156,7 +157,11 @@ src/pages/
 ├── CreateArticle.jsx   ✅
 ├── CreateArticle.css   ✅
 ├── EditArticle.jsx     ✅
-└── EditArticle.css     ✅
+├── EditArticle.css     ✅
+├── Profile.jsx         ✅
+├── Profile.css         ✅
+├── Admin.jsx           ✅
+└── Admin.css           ✅
 
 src/components/
 ├── home/
@@ -176,17 +181,14 @@ src/components/
 
 src/services/
 ├── articleService.js    ✅ (like/dislike ajouté)
-└── commentService.js    ✅ (nouveau)
+├── commentService.js    ✅ (nouveau)
+├── userService.js       ✅
+└── adminService.js      ✅
 
 src/context/
 └── AuthContext.jsx     ✅
 
 src/router.jsx           ✅
-
-# En attente de création :
-src/pages/
-├── Profile.jsx           ⏳
-└── Admin.jsx             ⏳
 ```
 
 ---
@@ -197,8 +199,8 @@ src/pages/
 2. ~~Module Commentaire~~ (Tâches 11-12) - ✅ TERMINÉ
 3. ~~Module Like/Dislike~~ (Tâche 13) - ✅ TERMINÉ
 4. ✅ **Module Recherche/Filtres** (Tâches 14-16) - Terminée
-5. **Module Admin Dashboard** (Tâches 17-20) - Nécessite auth admin
-6. **Module Profil** (Tâches 21-23) - Dépend de auth
+5. ~~Module Admin Dashboard~~ (Tâches 17-20) - ✅ TERMINÉ
+6. ~~Module Profil~~ (Tâches 21-23) - ✅ TERMINÉ
 
 ---
 
@@ -224,11 +226,18 @@ VITE_USE_MOCK=true
 ##  Documentation
 
 - **Catégories** : Technologie, Business, Design, Communauté, Formation, Événement, Culture, Société
+- **Gouvernance des categories** : les categories de publication sont predefinies par l'administrateur depuis `/admin` (onglet `Categories`)
 - **Limites** : 
   - Images : 5 Mo max (JPG/PNG/WebP)
   - Titre article : 10-200 caractères
   - Contenu article : 100-10000 caractères
   - Commentaire : 1-1000 caractères
+
+##  Acces au Dashboard Admin
+
+1. Connectez-vous avec un compte ayant `role: "admin"` (mock par defaut : `admin@lisanga.com`)
+2. Ouvrez `/admin` directement dans le navigateur ou via le menu utilisateur (Desktop/Mobile)
+3. Si vous n'etes pas admin, l'application vous redirige automatiquement vers l'accueil
 
 ###  Guides Additionnels
 

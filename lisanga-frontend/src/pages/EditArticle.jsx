@@ -7,8 +7,8 @@ import Button from '../components/common/Button';
 import Loader from '../components/common/Loader';
 import ErrorMessage from '../components/common/ErrorMessage';
 import { articleService } from '../services/articleService';
+import { categorieService } from '../services/categorieService';
 import { validateArticleTitle, validateArticleContent, validateCategory } from '../utils/validators';
-import { CATEGORIES } from '../utils/constants';
 import './EditArticle.css';
 
 function EditArticle() {
@@ -28,6 +28,7 @@ function EditArticle() {
   const [isLoading, setIsLoading] = useState(false);
   const [isFetching, setIsFetching] = useState(true);
   const [submitError, setSubmitError] = useState(null);
+  const [categories, setCategories] = useState([]);
   
   useEffect(() => {
     const fetchArticle = async () => {
@@ -57,6 +58,19 @@ function EditArticle() {
       fetchArticle();
     }
   }, [id]);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const data = await categorieService.getCategories();
+        setCategories(data);
+      } catch {
+        setCategories([]);
+      }
+    };
+
+    loadCategories();
+  }, []);
   
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -218,9 +232,9 @@ function EditArticle() {
                 aria-invalid={touched.category && !!errors.category}
               >
                 <option value="">Sélectionnez une catégorie</option>
-                {CATEGORIES.filter(cat => cat.value !== '').map(category => (
-                  <option key={category.id} value={category.value}>
-                    {category.label}
+                {categories.map((category) => (
+                  <option key={category.id_categorie} value={category.nom}>
+                    {category.nom}
                   </option>
                 ))}
               </select>

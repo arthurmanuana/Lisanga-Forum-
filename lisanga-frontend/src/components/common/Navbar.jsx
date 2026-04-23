@@ -149,6 +149,14 @@ function Navbar() {
                     </svg>
                     Profil
                   </Link>
+                  {user?.role === 'admin' && (
+                    <Link to="/admin" className="navbar__dropdown-item" role="menuitem" onClick={() => setProfileOpen(false)}>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M12 2l3 4 5 .8-3.5 3.7.8 5.2L12 14l-5.3 2.7.8-5.2L4 6.8 9 6z" />
+                      </svg>
+                      Admin
+                    </Link>
+                  )}
                   <button
                     type="button"
                     className="navbar__dropdown-item navbar__dropdown-item--danger"
@@ -237,6 +245,11 @@ function Navbar() {
                 <Link to="/profil" className="navbar__btn navbar__btn--outline navbar__btn--full" onClick={() => setMenuOpen(false)}>
                   Profil
                 </Link>
+                {user?.role === 'admin' && (
+                  <Link to="/admin" className="navbar__btn navbar__btn--outline navbar__btn--full" onClick={() => setMenuOpen(false)}>
+                    Dashboard Admin
+                  </Link>
+                )}
                 <button
                   type="button"
                   className="navbar__btn navbar__btn--outline navbar__btn--full navbar__btn--danger"

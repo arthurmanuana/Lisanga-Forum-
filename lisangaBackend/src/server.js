@@ -10,6 +10,9 @@ import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
 import reactionRoutes from './routes/reactionRoutes.js';
 import adminRoutes from './routes/adminRoutes.js';
+import categorieRoutes from './routes/categorieRoutes.js';
+import articleRoutes from './routes/articleRoutes.js';
+import commentaireRoutes from './routes/commentaireRoutes.js';
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -50,11 +53,14 @@ app.get("/api/health/db", async (req, res) => {
   }
 });
 
-//  Montage des routes API
-app.use('/api/auth', authRoutes);          //  Inscription / Connexion / Refresh
-app.use('/api/users', utilisateurRoutes);  //  Profil / Update / Password
-app.use('/api/articles', reactionRoutes);  //  Like/Dislike (monté sous /api/articles)
-app.use('/api/admin', adminRoutes);       // Dashboard Admin
+// Montage des routes API
+app.use('/api/auth', authRoutes);          // Inscription / Connexion / Refresh
+app.use('/api/users', utilisateurRoutes);  // Profil / Update / Password
+app.use('/api/articles', reactionRoutes);  // Like/Dislike (monte sous /api/articles)
+app.use('/api/admin', adminRoutes);        // Dashboard admin
+app.use('/api/categories', categorieRoutes);
+app.use('/api/articles', articleRoutes);
+app.use('/api/commentaires', commentaireRoutes);
 
 app.use('/uploads', express.static(join(__dirname, 'uploads')));
 // ... (routes admin & articles à venir)
@@ -68,7 +74,7 @@ app.use((req, res) => {
 });
 
 app.use((err, req, res, _next) => {
-  console.error("💥 Erreur non gérée :", err);
+  console.error("Erreur non gérée :", err);
   res.status(err.status || 500).json({
     error: err.name || "InternalServerError",
     code: err.status || 500,
@@ -77,5 +83,5 @@ app.use((err, req, res, _next) => {
 });
 
 app.listen(env.PORT, () => {
-  console.log(`✅ Lisanga API démarrée sur http://localhost:${env.PORT}`);
+  console.log(`Lisanga API démarrée sur http://localhost:${env.PORT}`);
 });

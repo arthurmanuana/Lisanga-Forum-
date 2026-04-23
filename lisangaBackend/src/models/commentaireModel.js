@@ -13,6 +13,7 @@ export const CommentaireModel = {
                  JOIN utilisateurs u ON c.id_utilisateur = u.id_utilisateurs
                  WHERE c.id_article = $1 
                    AND c.id_parent_commentaire IS NULL
+                   AND c.is_deleted = FALSE
                  ORDER BY c.date_commentaire ASC`,
                 [id_article]
             );
@@ -34,6 +35,7 @@ export const CommentaireModel = {
                  FROM commentaires c
                  JOIN utilisateurs u ON c.id_utilisateur = u.id_utilisateurs
                  WHERE c.id_parent_commentaire = $1
+                   AND c.is_deleted = FALSE
                  ORDER BY c.date_commentaire ASC`,
                 [id_parent_commentaire]
             );
@@ -47,7 +49,9 @@ export const CommentaireModel = {
     async getCommentById(id_commentaire) {
         try {
             const { rows } = await pool.query(
-                'SELECT * FROM commentaires WHERE id_commentaire = $1',
+                `SELECT * FROM commentaires 
+                 WHERE id_commentaire = $1 
+                   AND is_deleted = FALSE`,
                 [id_commentaire]
             );
             return rows[0] || null;
@@ -59,6 +63,26 @@ export const CommentaireModel = {
 
     async createComment({ id_article, id_utilisateur, contenu, id_parent_commentaire = null }) {
         try {
+            if (id_parent_commentaire !== null) {
+                const { rows: parentRows } = await pool.query(
+                    `SELECT id_parent_commentaire 
+                     FROM commentaires 
+                     WHERE id_commentaire = $1 
+                       AND is_deleted = FALSE`,
+                    [id_parent_commentaire]
+                );
+
+                if (parentRows.length === 0) {
+                    throw new Error('Le commentaire parent est introuvable');
+                }
+
+                if (parentRows[0].id_parent_commentaire !== null) {
+                    throw new Error(
+                        'Impossible de répondre à une réponse. Les commentaires sont limités à 2 niveaux.'
+                    );
+                }
+            }
+
             const { rows } = await pool.query(
                 `INSERT INTO commentaires (id_article, id_utilisateur, contenu, id_parent_commentaire)
                  VALUES ($1, $2, $3, $4)
@@ -72,26 +96,14 @@ export const CommentaireModel = {
         }
     },
 
-    async updateComment({ id_commentaire, contenu }) {
+    async softDeleteComment({ id_commentaire }) {
         try {
             const { rows } = await pool.query(
                 `UPDATE commentaires 
-                 SET contenu = $1, updated_at = CURRENT_TIMESTAMP 
-                 WHERE id_commentaire = $2 
+                 SET is_deleted = TRUE, updated_at = CURRENT_TIMESTAMP 
+                 WHERE id_commentaire = $1 
+                   AND is_deleted = FALSE
                  RETURNING *`,
-                [contenu, id_commentaire]
-            );
-            return rows[0] || null;
-        } catch (error) {
-            console.error('Erreur lors de la mise à jour du commentaire :', error);
-            throw error;
-        }
-    },
-
-    async deleteComment({ id_commentaire }) {
-        try {
-            const { rows } = await pool.query(
-                'DELETE FROM commentaires WHERE id_commentaire = $1 RETURNING *',
                 [id_commentaire]
             );
             return rows[0] || null;
@@ -108,6 +120,7 @@ export const CommentaireModel = {
                  FROM commentaires c
                  JOIN articles a ON c.id_article = a.id_article
                  WHERE c.id_utilisateur = $1
+                   AND c.is_deleted = FALSE
                  ORDER BY c.date_commentaire DESC`,
                 [id_utilisateur]
             );

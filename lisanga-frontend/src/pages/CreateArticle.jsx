@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
@@ -8,7 +8,7 @@ import Loader from '../components/common/Loader';
 import ErrorMessage from '../components/common/ErrorMessage';
 import { articleService } from '../services/articleService';
 import { validateArticleTitle, validateArticleContent, validateCategory, validateImage } from '../utils/validators';
-import { CATEGORIES } from '../utils/constants';
+import { categorieService } from '../services/categorieService';
 import './CreateArticle.css';
 
 function CreateArticle() {
@@ -26,6 +26,21 @@ function CreateArticle() {
   const [touched, setTouched] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState(null);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const data = await categorieService.getCategories();
+        setCategories(data);
+      } catch (error) {
+        console.error('Erreur lors du chargement des catégories :', error);
+        setCategories([]);
+      }
+    };
+
+    loadCategories();
+  }, []);
   
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -112,11 +127,11 @@ function CreateArticle() {
       setSubmitError(null);
       
       const data = new FormData();
-      data.append('title', formData.title);
-      data.append('content', formData.content);
-      data.append('category', formData.category);
+      data.append('titre', formData.title);
+      data.append('contenu', formData.content);
+      data.append('id_categorie', formData.category);
       if (formData.image) {
-        data.append('image', formData.image);
+        data.append('photo', formData.image);
       }
       
       const response = await articleService.createArticle(data);
@@ -198,9 +213,9 @@ function CreateArticle() {
                 aria-invalid={touched.category && !!errors.category}
               >
                 <option value="">Sélectionnez une catégorie</option>
-                {CATEGORIES.filter(cat => cat.value !== '').map(category => (
-                  <option key={category.id} value={category.value}>
-                    {category.label}
+                {categories.map((category) => (
+                  <option key={category.id_categorie} value={category.nom}>
+                    {category.nom}
                   </option>
                 ))}
               </select>

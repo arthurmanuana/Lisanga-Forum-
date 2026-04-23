@@ -82,6 +82,8 @@ lisanga-frontend/
 | `authService.js` | Service d'authentification (login, register, logout, getProfile) |
 | `articleService.js` | Service des articles (CRUD + like/dislike) |
 | `commentService.js` | Service des commentaires (CRUD) |
+| `adminService.js` | Service admin (stats, modération, utilisateurs, catégories) |
+| `userService.js` | Service utilisateur (profil, historique articles/commentaires) |
 | `mockData.js` | Données mockées pour le développement |
 
 #### Utils (`src/utils/`)
@@ -213,6 +215,8 @@ Les variables CSS sont définies dans `src/styles/variables.css` et incluent :
 | **EditArticle** | `/articles/:id/edit` | `EditArticle.jsx`, `EditArticle.css` | Formulaire de modification d'article (protégée) |
 | **Login** | `/connexion` | `Login.jsx`, `Login.css` | Formulaire de connexion |
 | **Register** | `/inscription` | `Register.jsx`, `Register.css` | Formulaire d'inscription |
+| **Profile** | `/profil` | `Profile.jsx`, `Profile.css` | Profil utilisateur avec édition et historique |
+| **Admin** | `/admin` | `Admin.jsx`, `Admin.css` | Dashboard administrateur (stats, modération, catégories) |
 
 ### 5.2 Routes Protégées
 
@@ -222,7 +226,7 @@ Les routes suivantes nécessitent une authentification :
 
 ### 5.3 Route Admin
 
-- `/admin` - Dashboard administrateur (à implémenter)
+- `/admin` - Dashboard administrateur (implémenté)
 
 ---
 
@@ -257,6 +261,21 @@ articleService.getUserVote(articleId)
 commentService.getCommentsByArticle(articleId)
 commentService.addComment(articleId, content, parentId)
 commentService.deleteComment(commentId)
+```
+
+### 6.4 Admin Service (`adminService.js`)
+
+```javascript
+adminService.getStats()
+adminService.getAllArticles({ page, limit })
+adminService.deleteArticle(articleId)
+adminService.getAllUsers({ page, limit })
+adminService.banUser(userId)
+adminService.unbanUser(userId)
+adminService.getAllCategories()
+adminService.addCategory(data)
+adminService.updateCategory(categoryId, data)
+adminService.deleteCategory(categoryId)
 ```
 
 ---
@@ -347,6 +366,12 @@ commentService.deleteComment(commentId)
 - Transition fluide entre thèmes
 - Variables CSS dédiées
 
+### 7.6 Dashboard Admin
+
+- Accès réservé aux comptes `role: "admin"`
+- Onglets : aperçu, articles, utilisateurs, catégories
+- Gestion des catégories prédéfinies depuis le dashboard (ajout/suppression/modification)
+
 ---
 
 ## 8. Catégories d'Articles
@@ -400,8 +425,10 @@ contenu: 1-1000 caractères
 | Commentaire | ✅ Terminé | 2/2 |
 | Like/Dislike | ✅ Terminé | 1/1 |
 | Recherche/Filtres | ✅ Terminé | 3/3 |
-| Admin Dashboard | ⏳ En attente | 4/4 |
+| Admin Dashboard | ✅ Terminé | 4/4 + gestion catégories |
 | Profil Utilisateur | ✅ Terminé | 3/3 |
+
+Note: les categories disponibles pour publier un article sont predefinies par l'administrateur depuis le dashboard (`/admin`, onglet `Categories`).
 
 ---
 
@@ -525,12 +552,18 @@ lisanga-frontend/
 │   │   ├── CreateArticle.css
 │   │   ├── CreateArticle.jsx
 │   │   ├── EditArticle.css
-│   │   └── EditArticle.jsx
+│   │   ├── EditArticle.jsx
+│   │   ├── Profile.css
+│   │   ├── Profile.jsx
+│   │   ├── Admin.css
+│   │   └── Admin.jsx
 │   ├── services/
 │   │   ├── api.js
 │   │   ├── articleService.js
 │   │   ├── authService.js
 │   │   ├── commentService.js
+│   │   ├── userService.js
+│   │   ├── adminService.js
 │   │   └── mockData.js
 │   ├── styles/
 │   │   ├── global.css
