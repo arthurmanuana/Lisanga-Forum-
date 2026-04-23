@@ -56,7 +56,7 @@ app.get("/api/health/db", async (req, res) => {
 
 // Montage des routes API
 app.use('/api/auth', authRoutes);          // Inscription / Connexion / Refresh
-app.use('/api/auth', utilisateurRoutes);  // Profil / Update / Password
+app.use('/api/users', utilisateurRoutes);  // Profil / Update / Password
 app.use('/api/articles', reactionRoutes);  // Like/Dislike (monte sous /api/articles)
 app.use('/api/admin', adminRoutes);        // Dashboard admin
 app.use('/api/categories', categorieRoutes);

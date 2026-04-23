@@ -2,24 +2,37 @@
  * @file authController.js
  * @description Gestion de l'authentification (Register, Login, Logout, Refresh)
  * @stack Express 5, ESM, bcryptjs, jsonwebtoken, cookie-parser
- * @note Ce controller suppose que la validation des entrées (Zod/Joi) est faite
- *       en amont par un middleware. Il se concentre sur la logique métier & sécurité.
+ * @conforme PDF: Format { data, message } / { error, code, message } | Mapping username/password
+ * @note Ce controller suppose que la validation des entrées (Zod) est faite en amont.
  */
 
-import { create, findByEmail, emailExists } from '../models/utilisateurModel.js';
+import { create, findByEmail, emailExists, findPublicById } from '../models/utilisateurModel.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { env } from '../config/env.js'; // Adapter selon tes exports réels
+import { env } from '../config/env.js';
 
 // ============================================================================
-// HELPERS INTERNES
+// ⚙️ HELPERS STANDARDISÉS (Conformes au guide PDF)
+// ============================================================================
+
+/**
+ * Format d'erreur imposé : { error: true, code: "STRING", message: "..." }
+ */
+const respondError = (res, status, code, message) => 
+  res.status(status).json({ error: true, code, message });
+
+/**
+ * Format de succès imposé : {  {...}, message: "..." }
+ */
+const respondSuccess = (res, status, data = {}, message = 'Opération réussie') => 
+  res.status(status).json({ data, message });
+
+// ============================================================================
+// 🔑 HELPERS INTERNES
 // ============================================================================
 
 /**
  * Génère un couple Access + Refresh Token
- * @param {number} userId 
- * @param {string} role 
- * @returns {{ accessToken: string, refreshToken: string }}
  */
 const generateTokens = (userId, role) => {
   const accessToken = jwt.sign(
@@ -39,9 +52,6 @@ const generateTokens = (userId, role) => {
 
 /**
  * Configure les options du cookie Refresh Token
- * httpOnly: empêche JS de le lire (protection XSS)
- * sameSite: strict/lax (protection CSRF)
- * secure: true en production (HTTPS uniquement)
  */
 const getCookieOptions = () => ({
   httpOnly: true,
@@ -52,34 +62,55 @@ const getCookieOptions = () => ({
 });
 
 // ============================================================================
-// ENDPOINT HANDLERS
+// 🟢 ENDPOINT HANDLERS
 // ============================================================================
 
 /**
  * POST /api/auth/register
  * Crée un compte, hash le mot de passe, retourne les tokens
+ * 
+ * Frontend envoie: { username, email, password, ... }
+ * Backend attend: { nom_utilisateur, email, mot_de_passe, ... }
  */
 export const register = async (req, res, next) => {
   try {
-    const { nom, prenom, email, mot_de_passe, nom_utilisateur, date_de_naissance, sexe } = req.body;
+    // 🔄 Mapping frontend → backend
+    const { username, email, password, nom, prenom, date_de_naissance, sexe } = req.body;
+    
+    // Utiliser username comme nom_utilisateur, ou le séparer en nom/prenom si fourni
+    const nom_utilisateur = username;
+    const finalNom = nom || username?.split('_')?.[1] || username || 'Utilisateur';
+    const finalPrenom = prenom || username?.split('_')?.[0] || 'Utilisateur';
 
-    // Vérification d'existence (rapide, évite une requête INSERT qui échouerait)
+    // Vérification d'existence
     const alreadyExists = await emailExists(email);
     if (alreadyExists) {
-      return res.status(409).json({ error: 'Un compte avec cet email existe déjà' });
+      return respondError(res, 409, 'EMAIL_ALREADY_EXISTS', 'Un compte avec cet email existe déjà');
     }
 
-    // Hash sécurisé (10 rounds = équilibre sécurité/performance)
-    const hashedPassword = await bcrypt.hash(mot_de_passe, 10);
+    // Hash sécurisé
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Délégation au Model
+    // Délégation au Model (avec les noms de champs backend)
     const result = await create({
-      nom, prenom, email, mot_de_passe: hashedPassword,
-      nom_utilisateur, date_de_naissance, sexe
+      nom: finalNom,
+      prenom: finalPrenom,
+      email,
+      mot_de_passe: hashedPassword,
+      nom_utilisateur,
+      date_de_naissance: date_de_naissance || null,
+      sexe: sexe || null
     });
 
     if (!result.success) {
-      return res.status(400).json({ error: result.error });
+      // Mapper les erreurs du model vers les codes frontend attendus
+      if (result.error?.includes('email')) {
+        return respondError(res, 409, 'EMAIL_ALREADY_EXISTS', result.error);
+      }
+      if (result.error?.includes('nom d\'utilisateur') || result.error?.includes('pseudo')) {
+        return respondError(res, 409, 'USERNAME_ALREADY_EXISTS', result.error);
+      }
+      return respondError(res, 400, 'VALIDATION_ERROR', result.error);
     }
 
     const user = result.user;
@@ -88,53 +119,60 @@ export const register = async (req, res, next) => {
     // Refresh token en cookie sécurisé
     res.cookie('refreshToken', refreshToken, getCookieOptions());
 
-    // Access token dans le corps (pour stockage frontend localStorage/sessionStorage)
-    res.status(201).json({
-      message: 'Inscription réussie',
-      user: { id: user.id_utilisateurs, email: user.email, role: user.role },
+    // ✅ Réponse conforme au guide PDF
+    respondSuccess(res, 201, {
+      userId: user.id_utilisateurs,
       accessToken
-    });
+    }, 'Inscription réussie ! Vous pouvez maintenant vous connecter.');
 
   } catch (err) {
-    next(err); // Passe au middleware d'erreur global
+    next(err);
   }
 };
 
 /**
  * POST /api/auth/login
  * Vérifie les identifiants, retourne les tokens si OK
+ * 
+ * Frontend envoie: { email, password }
+ * Backend compare avec: email, mot_de_passe (hashé)
  */
 export const login = async (req, res, next) => {
   try {
-    const { email, mot_de_passe } = req.body;
+    // 🔄 Mapping : frontend envoie "password"
+    const { email, password } = req.body;
 
-    // 1. Récupération de l'utilisateur (inclut le hash pour comparaison)
+    // Récupération de l'utilisateur (inclut le hash pour comparaison)
     const user = await findByEmail(email);
     if (!user) {
-      // Ne jamais préciser "email incorrect" vs "mot de passe incorrect"
-      // Évite le user enumeration attack
-      return res.status(401).json({ 
-        error: true, 
-        code: 'AUTH_INVALID_CREDENTIALS', 
-        message: 'Email ou mot de passe incorrect' 
-      });
+      // Message générique pour éviter l'énumération d'utilisateurs
+      return respondError(res, 401, 'AUTH_INVALID_CREDENTIALS', 'Email ou mot de passe incorrect');
     }
 
-    // 2. Comparaison du hash
-    const isMatch = await bcrypt.compare(mot_de_passe, user.mot_de_passe);
+    // Comparaison du hash (password frontend vs mot_de_passe backend)
+    const isMatch = await bcrypt.compare(password, user.mot_de_passe);
     if (!isMatch) {
-      return res.status(401).json({ error: 'Email ou mot de passe incorrect' });
+      return respondError(res, 401, 'AUTH_INVALID_CREDENTIALS', 'Email ou mot de passe incorrect');
     }
 
-    // 3. Génération & envoi des tokens
+    // Génération & envoi des tokens
     const { accessToken, refreshToken } = generateTokens(user.id_utilisateurs, user.role);
-    
     res.cookie('refreshToken', refreshToken, getCookieOptions());
-    res.json({
-      message: 'Connexion réussie',
-      user: { id: user.id_utilisateurs, email: user.email, role: user.role },
-      accessToken
-    });
+    
+    // 🔄 Mapping réponse : backend → frontend (format exact du guide)
+    const userResponse = {
+      id: user.id_utilisateurs,
+      username: user.nom_utilisateur || `${user.prenom}_${user.nom}`,
+      email: user.email,
+      role: user.role,
+      avatarUrl: user.photo || null,
+      createdAt: user.created_at
+    };
+
+    respondSuccess(res, 200, {
+      accessToken,
+      user: userResponse
+    }, 'Connexion réussie');
 
   } catch (err) {
     next(err);
@@ -143,37 +181,45 @@ export const login = async (req, res, next) => {
 
 /**
  * POST /api/auth/logout
- * Invalide le refresh token côté client + supprime le cookie
+ * Supprime le cookie refresh token
  */
 export const logout = (req, res) => {
-  // Le cookie est supprimé côté serveur
   res.clearCookie('refreshToken', getCookieOptions());
-  res.json({ message: 'Déconnexion réussie' });
+  respondSuccess(res, 200, {}, 'Déconnexion réussie');
 };
 
 /**
  * POST /api/auth/refresh
  * Génère un nouveau access token si le refresh token est valide
+ * 
+ * Note: Le refresh token contient { id }, pas email → utiliser findPublicById(decoded.id)
  */
 export const refresh = async (req, res, next) => {
   try {
     const token = req.cookies?.refreshToken;
-    if (!token) return res.status(401).json({ error: 'Refresh token manquant' });
+    if (!token) {
+      return respondError(res, 401, 'AUTH_TOKEN_MISSING', 'Refresh token manquant');
+    }
 
     // Vérification du refresh token
     const decoded = jwt.verify(token, env.JWT_REFRESH_SECRET);
     
-    // Vérification que l'utilisateur existe toujours
-    const user = await findByEmail(decoded.email || ''); // Si tu stockes email dans refresh
-    // Sinon: const user = await findPublicById(decoded.id);
-    if (!user) return res.status(403).json({ error: 'Utilisateur invalide' });
+    // ✅ Correction : utiliser decoded.id (le token ne contient que l'ID)
+    const user = await findPublicById(decoded.id);
+    if (!user) {
+      return respondError(res, 403, 'AUTH_USER_NOT_FOUND', 'Utilisateur invalide');
+    }
 
     const { accessToken } = generateTokens(user.id_utilisateurs, user.role);
-    res.json({ accessToken });
+    
+    respondSuccess(res, 200, { accessToken }, 'Token rafraîchi');
 
   } catch (err) {
-    if (err.name === 'TokenExpiredError' || err.name === 'JsonWebTokenError') {
-      return res.status(403).json({ error: 'Refresh token invalide ou expiré' });
+    if (err.name === 'TokenExpiredError') {
+      return respondError(res, 401, 'AUTH_TOKEN_EXPIRED', 'Refresh token expiré');
+    }
+    if (err.name === 'JsonWebTokenError' || err.name === 'TokenError') {
+      return respondError(res, 403, 'AUTH_TOKEN_INVALID', 'Refresh token invalide');
     }
     next(err);
   }
