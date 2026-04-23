@@ -7,6 +7,7 @@ import Register from './pages/Register';
 import CreateArticle from './pages/CreateArticle';
 import EditArticle from './pages/EditArticle';
 import Profile from './pages/Profile';
+import Admin from './pages/Admin';
 import ProtectedRoute from './components/common/ProtectedRoute';
 
 function AppRouter() {
@@ -47,7 +48,7 @@ function AppRouter() {
             path="/admin"
             element={
               <ProtectedRoute>
-                <div>Dashboard Admin (à implémenter)</div>
+                <Admin />
               </ProtectedRoute>
             }
           />

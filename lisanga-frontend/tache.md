@@ -173,6 +173,7 @@ Le dashboard admin nécessite :
 - Un service admin pour les statistiques
 - Une interface de modération des articles
 - Une gestion des utilisateurs (bannissement)
+- Une gestion des categories predefinies (creation/suppression)
 
 ---
 
