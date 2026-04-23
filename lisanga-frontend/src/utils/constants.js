@@ -74,7 +74,9 @@ export const TOKEN_EXPIRY = {
 
 export const LOCAL_STORAGE_KEYS = {
   accessToken: 'lisanga_access_token',
-  theme: 'lisanga_theme'
+  theme: 'lisanga_theme',
+  sortPreference: 'lisanga_sort_preference',
+  searchHistory: 'lisanga_search_history'
 };
 
 export const SESSION_STORAGE_KEYS = {

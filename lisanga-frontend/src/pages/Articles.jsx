@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useDebounce } from '../hooks/useDebounce';
 import Navbar from '../components/common/Navbar';
@@ -9,7 +9,7 @@ import Loader from '../components/common/Loader';
 import ErrorMessage from '../components/common/ErrorMessage';
 import Button from '../components/common/Button';
 import { articleService } from '../services/articleService';
-import { SORT_OPTIONS, PAGINATION } from '../utils/constants';
+import { SORT_OPTIONS, PAGINATION, LOCAL_STORAGE_KEYS } from '../utils/constants';
 import './Articles.css';
 
 function Articles() {
@@ -18,12 +18,42 @@ function Articles() {
   const [error, setError] = useState(null);
   const [activeCategory, setActiveCategory] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
-  const [sortBy, setSortBy] = useState('recent');
+  const [sortBy, setSortBy] = useState(() => localStorage.getItem(LOCAL_STORAGE_KEYS.sortPreference) || 'recent');
   const [currentPage, setCurrentPage] = useState(1);
   const [pagination, setPagination] = useState(null);
+  const [categoryCounts, setCategoryCounts] = useState({});
+  const [searchHistory, setSearchHistory] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEYS.searchHistory)) || [];
+    } catch {
+      return [];
+    }
+  });
+  const [showHistory, setShowHistory] = useState(false);
   
   const debouncedSearch = useDebounce(searchQuery, 300);
-  
+
+  const searchSuggestions = useMemo(() => {
+    if (!searchQuery.trim()) {
+      return [];
+    }
+
+    const query = searchQuery.toLowerCase();
+    return [...new Set(
+      articles
+        .filter(article => article.title.toLowerCase().includes(query))
+        .map(article => article.title)
+    )].slice(0, 5);
+  }, [articles, searchQuery]);
+
+  const historySuggestions = useMemo(() => {
+    if (!searchHistory.length) {
+      return [];
+    }
+
+    return searchHistory.filter(item => item.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 5);
+  }, [searchHistory, searchQuery]);
+
   const loadArticles = useCallback(async () => {
     try {
       setLoading(true);
@@ -46,9 +76,35 @@ function Articles() {
     }
   }, [activeCategory, debouncedSearch, sortBy, currentPage]);
   
+  const loadCategoryCounts = useCallback(async () => {
+    try {
+      const counts = await articleService.getCategoryCounts();
+      setCategoryCounts(counts?.counts || counts || {});
+    } catch {
+      setCategoryCounts({});
+    }
+  }, []);
+  
   useEffect(() => {
     loadArticles();
   }, [activeCategory, debouncedSearch, sortBy, currentPage, loadArticles]);
+  
+  useEffect(() => {
+    loadCategoryCounts();
+  }, [loadCategoryCounts]);
+  
+  useEffect(() => {
+    if (!debouncedSearch.trim()) {
+      return;
+    }
+
+    setSearchHistory((previousHistory) => {
+      const history = previousHistory.filter(item => item.toLowerCase() !== debouncedSearch.toLowerCase());
+      const nextHistory = [debouncedSearch, ...history].slice(0, 5);
+      localStorage.setItem(LOCAL_STORAGE_KEYS.searchHistory, JSON.stringify(nextHistory));
+      return nextHistory;
+    });
+  }, [debouncedSearch]);
   
   const handleCategoryChange = (category) => {
     setActiveCategory(category);
@@ -58,10 +114,39 @@ function Articles() {
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
     setCurrentPage(1);
+    setShowHistory(true);
+  };
+  
+  const handleSearchFocus = () => {
+    setShowHistory(true);
+  };
+
+  const handleSearchBlur = () => {
+    window.setTimeout(() => setShowHistory(false), 150);
+  };
+
+  const handleSuggestionClick = (value) => {
+    setSearchQuery(value);
+    setCurrentPage(1);
+    setShowHistory(false);
+  };
+
+  const handleHistoryClick = (value) => {
+    setSearchQuery(value);
+    setCurrentPage(1);
+    setShowHistory(false);
   };
   
   const handleSortChange = (e) => {
-    setSortBy(e.target.value);
+    const value = e.target.value;
+    setSortBy(value);
+    localStorage.setItem(LOCAL_STORAGE_KEYS.sortPreference, value);
+    setCurrentPage(1);
+  };
+  
+  const handleResetFilters = () => {
+    setActiveCategory('');
+    setSearchQuery('');
     setCurrentPage(1);
   };
   
@@ -92,6 +177,7 @@ function Articles() {
               activeCategory={activeCategory}
               onCategoryChange={handleCategoryChange}
               articlesCount={pagination?.totalArticles}
+              categoryCounts={categoryCounts}
             />
             
             <div className="articles__toolbar">
@@ -105,9 +191,42 @@ function Articles() {
                   placeholder="Rechercher un article..."
                   value={searchQuery}
                   onChange={handleSearchChange}
+                  onFocus={handleSearchFocus}
+                  onBlur={handleSearchBlur}
                   className="articles__search-input"
                   aria-label="Rechercher des articles"
                 />
+
+                {showHistory && searchQuery.trim() && searchSuggestions.length > 0 && (
+                  <div className="articles__search-suggestions" role="listbox">
+                    {searchSuggestions.map((suggestion) => (
+                      <button
+                        key={suggestion}
+                        type="button"
+                        className="articles__search-suggestion"
+                        onMouseDown={() => handleSuggestionClick(suggestion)}
+                      >
+                        {suggestion}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {showHistory && !searchQuery.trim() && historySuggestions.length > 0 && (
+                  <div className="articles__search-suggestions" role="listbox">
+                    <p className="articles__search-suggestions-title">Recherches récentes</p>
+                    {historySuggestions.map((item) => (
+                      <button
+                        key={item}
+                        type="button"
+                        className="articles__search-suggestion"
+                        onMouseDown={() => handleHistoryClick(item)}
+                      >
+                        {item}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
               
               <select 
@@ -122,6 +241,12 @@ function Articles() {
                   </option>
                 ))}
               </select>
+
+              {(activeCategory || searchQuery) && (
+                <Button variant="outline" onClick={handleResetFilters}>
+                  Réinitialiser
+                </Button>
+              )}
             </div>
           </div>
           

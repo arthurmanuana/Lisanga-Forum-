@@ -1,13 +1,15 @@
 import { CATEGORIES } from '../../utils/constants';
 import './CategoryFilter.css';
 
-function CategoryFilter({ activeCategory, onCategoryChange, articlesCount }) {
+function CategoryFilter({ activeCategory, onCategoryChange, articlesCount, categoryCounts = {} }) {
   return (
     <div className="category-filter">
       <div className="category-filter__container">
         <div className="category-filter__pills-wrapper" role="group" aria-label="Filtrer par catégorie">
           {CATEGORIES.map(category => {
             const isActive = activeCategory === category.value;
+            const count = categoryCounts[category.value] ?? 0;
+
             return (
               <button
                 key={category.id}
@@ -17,11 +19,12 @@ function CategoryFilter({ activeCategory, onCategoryChange, articlesCount }) {
                 aria-pressed={isActive}
               >
                 {category.label}
+                <span className="category-filter__pill-count">{count}</span>
               </button>
             );
           })}
         </div>
-        {articlesCount !== undefined && (
+        {typeof articlesCount === 'number' && (
           <p className="category-filter__count" aria-live="polite">
             <span className="category-filter__count-number">{articlesCount}</span>
             {' '}article{articlesCount !== 1 ? 's' : ''}
