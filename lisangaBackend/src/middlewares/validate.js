@@ -22,8 +22,18 @@ export const validate = (schema) => {
     } catch (err) {
       if (err instanceof ZodError) {
         // Prend la première erreur pour un message clair
-        const firstError = err.errors[0];
-        const field = firstError.path.join('.');
+        const issues = err.issues || err.errors || [];
+        const firstError = issues[0];
+
+        if (!firstError) {
+          return res.status(400).json({
+            error: true,
+            code: 'VALIDATION_ERROR',
+            message: 'Données invalides'
+          });
+        }
+
+        const field = firstError.path?.length ? firstError.path.join('.') : 'body';
         const message = `${field} : ${firstError.message}`;
 
         return res.status(400).json({

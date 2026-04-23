@@ -6,6 +6,7 @@ import {
     getArticlesByUserId,
     getArticlesByCategory,
     createArticle,
+    updateArticle,
     deleteArticle,
 } from '../controllers/articleController.js';
 import { authenticate } from '../middlewares/auth.js';
@@ -30,6 +31,13 @@ router.post(
     uploadArticleImage,
     handleArticleUploadError,
     createArticle
+);
+router.put(
+    '/:id',
+    authenticate,
+    uploadArticleImage,
+    handleArticleUploadError,
+    updateArticle
 );
 router.delete('/:id', authenticate, deleteArticle);
 

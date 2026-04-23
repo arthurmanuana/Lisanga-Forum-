@@ -19,6 +19,7 @@ router.use(authorizeRoles('admin'));
 
 // GET /api/admin/stats
 router.get('/stats', adminController.getStats);
+router.get('/users', adminController.getUsers);
 
 // Exemple de future route (décommenter quand prête) :
 // router.delete('/users/:id', adminController.deleteUser);

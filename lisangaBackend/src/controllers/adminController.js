@@ -48,6 +48,58 @@ export const getStats = async (req, res) => {
   }
 };
 
-// Note : Tu pourras ajouter ici plus tard :
-// - deleteUser, banUser, moderateArticle, etc.
-// - Toujours protégés par le middleware authorizeRoles('admin')
+// ============================================================================
+// GET /api/admin/users - Liste paginée des utilisateurs (vue admin)
+// ============================================================================
+
+export const getUsers = async (req, res) => {
+  try {
+    const page = Math.max(1, Number(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, Number(req.query.limit) || 20));
+    const offset = (page - 1) * limit;
+
+    const [usersRes, countRes] = await Promise.all([
+      pool.query(
+        `SELECT
+          id_utilisateurs,
+          nom_utilisateur,
+          email,
+          role,
+          TRUE AS is_active,
+          created_at
+         FROM utilisateurs
+         ORDER BY created_at DESC
+         LIMIT $1 OFFSET $2`,
+        [limit, offset]
+      ),
+      pool.query('SELECT COUNT(*)::integer as total FROM utilisateurs')
+    ]);
+
+    const users = usersRes.rows.map((u) => ({
+      id: u.id_utilisateurs,
+      username: u.nom_utilisateur || 'utilisateur',
+      email: u.email,
+      role: u.role,
+      isActive: u.is_active,
+      createdAt: u.created_at,
+    }));
+
+    const total = countRes.rows[0].total;
+    return respondSuccess(
+      res,
+      200,
+      {
+        users,
+        pagination: {
+          currentPage: page,
+          totalPages: Math.max(1, Math.ceil(total / limit)),
+          totalUsers: total,
+        },
+      },
+      'Utilisateurs récupérés avec succès'
+    );
+  } catch (err) {
+    console.error('[Admin] Erreur getUsers:', err.message);
+    return respondError(res, 500, 'SERVER_ERROR', 'Erreur lors de la récupération des utilisateurs');
+  }
+};

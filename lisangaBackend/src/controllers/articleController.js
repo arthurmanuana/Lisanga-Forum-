@@ -196,10 +196,9 @@ export const createArticle = async (req, res) => {
             });
         }
 
-        const finalPhoto =
-            req.file?.path?.replace(/\\/g, '/') ??
-            req.file?.filename ??
-            (typeof photo === 'string' && photo.trim().length > 0 ? photo.trim() : null);
+        const finalPhoto = req.file?.filename
+            ? `/uploads/articles/${req.file.filename}`
+            : (typeof photo === 'string' && photo.trim().length > 0 ? photo.trim() : null);
 
         const newArticle = await ArticleModel.createArticle({
             id_utilisateur,
@@ -226,6 +225,112 @@ export const createArticle = async (req, res) => {
         return res.status(500).json({
             success: false,
             message: "Erreur lors de la creation de l'article",
+        });
+    }
+};
+
+export const updateArticle = async (req, res) => {
+    try {
+        const id_article = toPositiveInt(req.params.id);
+        if (!id_article) {
+            return res.status(400).json({
+                success: false,
+                message: "L'identifiant de l'article est invalide",
+            });
+        }
+
+        if (!req.user?.id) {
+            return res.status(401).json({
+                success: false,
+                message: 'Authentification requise',
+            });
+        }
+
+        const article = await ArticleModel.getArticleById(id_article);
+        if (!article) {
+            return res.status(404).json({
+                success: false,
+                message: 'Article introuvable',
+            });
+        }
+
+        const isOwner = article.id_utilisateur === req.user.id;
+        const isAdmin = req.user.role === 'admin';
+        if (!isOwner && !isAdmin) {
+            return res.status(403).json({
+                success: false,
+                message: "Vous n'avez pas le droit de modifier cet article",
+            });
+        }
+
+        const { id_categorie, titre, contenu, photo } = req.body;
+
+        const parsedCategoryId = toPositiveInt(id_categorie);
+        if (!parsedCategoryId) {
+            return res.status(400).json({
+                success: false,
+                message: "La categorie est obligatoire et doit etre valide",
+            });
+        }
+
+        if (!titre || typeof titre !== 'string' || titre.trim().length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Le titre de l'article est obligatoire",
+            });
+        }
+
+        if (titre.trim().length > 255) {
+            return res.status(400).json({
+                success: false,
+                message: "Le titre de l'article ne doit pas depasser 255 caracteres",
+            });
+        }
+
+        if (!contenu || typeof contenu !== 'string' || contenu.trim().length === 0) {
+            return res.status(400).json({
+                success: false,
+                message: "Le contenu de l'article est obligatoire",
+            });
+        }
+
+        const imageValidationError = validateUploadedImage(req.file);
+        if (imageValidationError) {
+            return res.status(400).json({
+                success: false,
+                message: imageValidationError,
+            });
+        }
+
+        const finalPhoto = req.file?.filename
+            ? `/uploads/articles/${req.file.filename}`
+            : (typeof photo === 'string' && photo.trim().length > 0 ? photo.trim() : null);
+
+        const updatedArticle = await ArticleModel.updateArticle({
+            id_article,
+            id_categorie: parsedCategoryId,
+            titre: titre.trim(),
+            contenu: contenu.trim(),
+            photo: finalPhoto,
+        });
+
+        return res.status(200).json({
+            success: true,
+            message: 'Article modifie avec succes',
+            data: updatedArticle,
+        });
+    } catch (error) {
+        if (error.code === '23503') {
+            return res.status(400).json({
+                success: false,
+                message: 'Categorie invalide',
+            });
+        }
+
+        console.error('Erreur updateArticle :', error);
+        return res.status(500).json({
+            success: false,
+            message: "Erreur lors de la mise a jour de l'article",
         });
     }
 };

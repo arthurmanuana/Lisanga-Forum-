@@ -62,7 +62,7 @@ app.use('/api/categories', categorieRoutes);
 app.use('/api/articles', articleRoutes);
 app.use('/api/commentaires', commentaireRoutes);
 
-app.use('/uploads', express.static(join(__dirname, 'uploads')));
+app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
 // ... (routes admin & articles à venir)
 
 app.use((req, res) => {
