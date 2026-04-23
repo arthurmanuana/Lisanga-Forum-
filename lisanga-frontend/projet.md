@@ -399,7 +399,7 @@ contenu: 1-1000 caractères
 | Article | ✅ Terminé | 4/4 |
 | Commentaire | ✅ Terminé | 2/2 |
 | Like/Dislike | ✅ Terminé | 1/1 |
-| Recherche/Filtres | ⏳ En attente | 3/3 |
+| Recherche/Filtres | ✅ Terminé | 3/3 |
 | Admin Dashboard | ⏳ En attente | 4/4 |
 | Profil Utilisateur | ⏳ En attente | 3/3 |
 

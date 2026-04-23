@@ -210,6 +210,8 @@ Cookie: refreshToken=<token>
 | page | number | 1 | Numéro de page |
 | limit | number | 9 | Articles par page |
 
+**Note :** Le frontend peut également appeler un endpoint optionnel `GET /api/articles/category-counts` pour récupérer le nombre d'articles par catégorie et enrichir l'interface de filtres.
+
 **Response (200) :**
 ```json
 {

@@ -70,7 +70,7 @@ Le projet utilise un design system strict avec :
 | **Article** | ✅ Terminé | 4/4 |
 | **Commentaire** | ✅ Terminé | 2/2 |
 | **Like/Dislike** | ✅ Terminé | 1/1 |
-| **Recherche/Filtres** | ⏳ En attente | 0/3 |
+| **Recherche/Filtres** | ✅ Terminé | 3/3 |
 | **Admin Dashboard** | ⏳ En attente | 0/4 |
 | **Profil Utilisateur** | ⏳ En attente | 0/3 |
 
@@ -113,12 +113,12 @@ Le projet utilise un design system strict avec :
  
 ---
 
-### ⏳ Module Recherche/Filtres - EN ATTENTE
+### ✅ Module Recherche/Filtres - TERMINÉ
 
-**Tâches à réaliser (2/2):**
-- ⏳ Tâche 14 : Filtres par catégorie
-- ⏳ Tâche 15 : Options de tri (récent, populaire, commenté)
-- ⏳ Tâche 16 : Barre de recherche articles
+**Tâches réalisées (3/3):**
+- ✅ Tâche 14 : Filtres par catégorie
+- ✅ Tâche 15 : Options de tri (récent, populaire, commenté)
+- ✅ Tâche 16 : Barre de recherche articles
 
 ---
 
@@ -196,7 +196,7 @@ src/pages/
 1. ~~Module Article~~ (Tâches 7-10) - ✅ TERMINÉ
 2. ~~Module Commentaire~~ (Tâches 11-12) - ✅ TERMINÉ
 3. ~~Module Like/Dislike~~ (Tâche 13) - ✅ TERMINÉ
-4. **Module Recherche/Filtres** (Tâches 14-16) - Indépendant
+4. ✅ **Module Recherche/Filtres** (Tâches 14-16) - Terminée
 5. **Module Admin Dashboard** (Tâches 17-20) - Nécessite auth admin
 6. **Module Profil** (Tâches 21-23) - Dépend de auth
 

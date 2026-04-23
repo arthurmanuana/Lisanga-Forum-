@@ -12,20 +12,19 @@ Il reste **10 tâches** à implémenter, organisées en 3 modules :
 
 ---
 
-## Module Recherche/Filtres (Tâches 14-16)
+## Module Recherche/Filtres (Tâches 14-16) - ✅ Terminée
 
 ### Note Importante
 
-La plupart des fonctionnalités de recherche et filtres sont **déjà implémentées** dans les pages existantes :
-- `Home.jsx` et `Articles.jsx` contain déjà les filtres par catégorie
-- La barre de recherche est déjà présente
-- Les options de tri sont déjà fonctionnelles
-
-Ce module nécessite principalement des **améliorations**.
+Les améliorations attendues ont été implémentées dans le module Recherche/Filtres :
+- `Home.jsx` et `Articles.jsx` supportent maintenant catégorie + recherche + tri combinés
+- Le tri préféré est conservé en localStorage
+- La barre de recherche affiche des suggestions et enregistre l'historique
+- Les filtres par catégorie affichent le nombre d'articles par catégorie
 
 ---
 
-### Tâche 14 : Améliorer les Filtres par Catégorie
+### ✅ Tâche 14 : Améliorer les Filtres par Catégorie
 
 **Situation actuelle :**
 - `CategoryFilter.jsx` affiche les catégories disponibles
@@ -73,7 +72,7 @@ function CategoryFilter({ activeCategory, onCategoryChange, categoryCounts }) {
 
 ---
 
-### Tâche 15 : Options de Tri Améliorées
+### ✅ Tâche 15 : Options de Tri Améliorées
 
 **Situation actuelle :**
 - Le tri est implémenté dans `articleService.js` (mode mock)
@@ -103,7 +102,7 @@ const handleSortChange = (e) => {
 
 ---
 
-### Tâche 16 : Barre de Recherche Améliorée
+### ✅ Tâche 16 : Barre de Recherche Améliorée
 
 **Situation actuelle :**
 - Recherche implémentée avec `useDebounce` (300ms)
