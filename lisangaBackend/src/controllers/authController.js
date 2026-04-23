@@ -12,7 +12,7 @@ import jwt from 'jsonwebtoken';
 import { env } from '../config/env.js'; // Adapter selon tes exports réels
 
 // ============================================================================
-// ⚙️ HELPERS INTERNES
+// HELPERS INTERNES
 // ============================================================================
 
 /**
@@ -39,9 +39,9 @@ const generateTokens = (userId, role) => {
 
 /**
  * Configure les options du cookie Refresh Token
- * 🔒 httpOnly: empêche JS de le lire (protection XSS)
- * 🔒 sameSite: strict/lax (protection CSRF)
- * 🔒 secure: true en production (HTTPS uniquement)
+ * httpOnly: empêche JS de le lire (protection XSS)
+ * sameSite: strict/lax (protection CSRF)
+ * secure: true en production (HTTPS uniquement)
  */
 const getCookieOptions = () => ({
   httpOnly: true,
@@ -52,7 +52,7 @@ const getCookieOptions = () => ({
 });
 
 // ============================================================================
-// 🟢 ENDPOINT HANDLERS
+// ENDPOINT HANDLERS
 // ============================================================================
 
 /**
@@ -63,16 +63,16 @@ export const register = async (req, res, next) => {
   try {
     const { nom, prenom, email, mot_de_passe, nom_utilisateur, date_de_naissance, sexe } = req.body;
 
-    // 🛡️ Vérification d'existence (rapide, évite une requête INSERT qui échouerait)
+    // Vérification d'existence (rapide, évite une requête INSERT qui échouerait)
     const alreadyExists = await emailExists(email);
     if (alreadyExists) {
       return res.status(409).json({ error: 'Un compte avec cet email existe déjà' });
     }
 
-    // 🔐 Hash sécurisé (10 rounds = équilibre sécurité/performance)
+    // Hash sécurisé (10 rounds = équilibre sécurité/performance)
     const hashedPassword = await bcrypt.hash(mot_de_passe, 10);
 
-    // 📦 Délégation au Model
+    // Délégation au Model
     const result = await create({
       nom, prenom, email, mot_de_passe: hashedPassword,
       nom_utilisateur, date_de_naissance, sexe
@@ -85,10 +85,10 @@ export const register = async (req, res, next) => {
     const user = result.user;
     const { accessToken, refreshToken } = generateTokens(user.id_utilisateurs, user.role);
 
-    // 🍪 Refresh token en cookie sécurisé
+    // Refresh token en cookie sécurisé
     res.cookie('refreshToken', refreshToken, getCookieOptions());
 
-    // 🔑 Access token dans le corps (pour stockage frontend localStorage/sessionStorage)
+    // Access token dans le corps (pour stockage frontend localStorage/sessionStorage)
     res.status(201).json({
       message: 'Inscription réussie',
       user: { id: user.id_utilisateurs, email: user.email, role: user.role },
@@ -111,7 +111,7 @@ export const login = async (req, res, next) => {
     // 1. Récupération de l'utilisateur (inclut le hash pour comparaison)
     const user = await findByEmail(email);
     if (!user) {
-      // ⚠️ Ne jamais préciser "email incorrect" vs "mot de passe incorrect"
+      // Ne jamais préciser "email incorrect" vs "mot de passe incorrect"
       // Évite le user enumeration attack
       return res.status(401).json({ 
         error: true, 

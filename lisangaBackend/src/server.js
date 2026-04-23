@@ -6,8 +6,15 @@ import { pool } from "./db/pool.js";
 
 import authRoutes from './routes/authRoutes.js';
 import utilisateurRoutes from './routes/utilisateurRoutes.js';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+import reactionRoutes from './routes/reactionRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 const app = express();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
 
 app.use(
   cors({
@@ -43,10 +50,13 @@ app.get("/api/health/db", async (req, res) => {
   }
 });
 
-// 📍 Montage des routes API
-app.use('/api/auth', authRoutes);          // 🔓 Inscription / Connexion / Refresh
-app.use('/api/users', utilisateurRoutes);  // 🔒 Profil / Update / Password
+//  Montage des routes API
+app.use('/api/auth', authRoutes);          //  Inscription / Connexion / Refresh
+app.use('/api/users', utilisateurRoutes);  //  Profil / Update / Password
+app.use('/api/articles', reactionRoutes);  //  Like/Dislike (monté sous /api/articles)
+app.use('/api/admin', adminRoutes);       // Dashboard Admin
 
+app.use('/uploads', express.static(join(__dirname, 'uploads')));
 // ... (routes admin & articles à venir)
 
 app.use((req, res) => {

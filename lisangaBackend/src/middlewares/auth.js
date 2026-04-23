@@ -8,7 +8,7 @@ import jwt from 'jsonwebtoken';
 import { env } from '../config/env.js';
 
 export const authenticate = (req, res, next) => {
-  // 1️⃣ Extraction du token depuis le header
+  // 1) Extraction du token depuis le header
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
     return res.status(401).json({
@@ -20,11 +20,11 @@ export const authenticate = (req, res, next) => {
 
   const token = authHeader.split(' ')[1];
 
-  // 2️⃣ Vérification & décryptage
+  // 2) Vérification & décryptage
   try {
     const decoded = jwt.verify(token, env.JWT_ACCESS_SECRET);
     
-    // 3️⃣ Injection dans la requête pour les controllers
+    // 3) Injection dans la requête pour les controllers
     req.user = {
       id: decoded.id,
       email: decoded.email,
@@ -32,7 +32,7 @@ export const authenticate = (req, res, next) => {
     };
     next();
   } catch (err) {
-    // 4️⃣ Gestion des erreurs JWT standardisée
+    // 4) Gestion des erreurs JWT standardisée
     if (err.name === 'TokenExpiredError') {
       return res.status(401).json({
         error: true,

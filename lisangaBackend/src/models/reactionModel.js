@@ -11,7 +11,7 @@
 import { pool } from '../db/pool.js';
 
 // ============================================================================
-// ⚙️ CONSTANTES & CONFIGURATION
+// CONSTANTES & CONFIGURATION
 // ============================================================================
 
 /**
@@ -27,7 +27,7 @@ const PG_CHECK_VIOLATION = '23514'; // check_violation (valeur hors 'like'/'disl
 const ALLOWED_REACTION_VALUES = ['like', 'dislike'];
 
 // ============================================================================
-// 🔄 MÉTHODE PRINCIPALE : UPSERT (Ajout ou Modification)
+// MÉTHODE PRINCIPALE : UPSERT (Ajout ou Modification)
 // ============================================================================
 
 /**
@@ -45,12 +45,12 @@ const ALLOWED_REACTION_VALUES = ['like', 'dislike'];
  */
 export const upsert = async (articleId, userId, valeur) => {
   try {
-    // 🛡️ Validation pré-DB : évite une requête inutile vers PostgreSQL
+    // Validation pré-DB : évite une requête inutile vers PostgreSQL
     if (!ALLOWED_REACTION_VALUES.includes(valeur)) {
       return { success: false, error: 'Valeur invalide. Utilisez "like" ou "dislike"' };
     }
 
-    // 💡 ON CONFLICT gère élégamment :
+    // ON CONFLICT gère élégamment :
     // - Cas 1 : Première réaction → INSERT
     // - Cas 2 : Réaction existante → UPDATE (change like ↔ dislike)
     const query = `
@@ -76,7 +76,7 @@ export const upsert = async (articleId, userId, valeur) => {
     };
 
   } catch (err) {
-    // 🔍 Si l'article ou l'utilisateur n'existe pas, PostgreSQL lève une FK violation
+    // Si l'article ou l'utilisateur n'existe pas, PostgreSQL lève une FK violation
     if (err.code === PG_FK_VIOLATION) {
       return { success: false, error: 'Impossible de réagir : article ou utilisateur introuvable' };
     }
@@ -87,7 +87,7 @@ export const upsert = async (articleId, userId, valeur) => {
 };
 
 // ============================================================================
-// ❌ MÉTHODE DE SUPPRESSION (Retirer une réaction)
+// MÉTHODE DE SUPPRESSION (Retirer une réaction)
 // ============================================================================
 
 /**
@@ -113,7 +113,7 @@ export const remove = async (articleId, userId) => {
 };
 
 // ============================================================================
-// 🔍 MÉTHODES DE LECTURE (READ)
+// MÉTHODES DE LECTURE (READ)
 // ============================================================================
 
 /**
@@ -199,7 +199,7 @@ export const getRecentWithUsers = async (articleId, { limit = 20, offset = 0 } =
 };
 
 // ============================================================================
-// 📊 MÉTHODES UTILITAIRES (OPTIONNELLES MAIS UTILES)
+// MÉTHODES UTILITAIRES (OPTIONNELLES MAIS UTILES)
 // ============================================================================
 
 /**

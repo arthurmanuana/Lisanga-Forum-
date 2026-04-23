@@ -8,12 +8,12 @@
 import { pool } from '../db/pool.js';
 
 // ============================================================================
-// ⚙️ CONSTANTES DE CONFIGURATION
+// CONSTANTES DE CONFIGURATION
 // ============================================================================
 
 /**
  * Liste blanche des champs autorisés en mise à jour
- * 🔒 Sécurité : empêche la modification de champs sensibles comme 'role' ou 'mot_de_passe'
+ * Sécurité : empêche la modification de champs sensibles comme 'role' ou 'mot_de_passe'
  * via cette méthode générique. Pour changer le mot de passe, utiliser une méthode dédiée.
  */
 const ALLOWED_UPDATE_FIELDS = [
@@ -28,7 +28,7 @@ const ALLOWED_UPDATE_FIELDS = [
 
 /**
  * Liste des colonnes publiques à retourner aux clients
- * 🔒 Sécurité : exclut systématiquement 'mot_de_passe' et autres données sensibles
+ * Sécurité : exclut systématiquement 'mot_de_passe' et autres données sensibles
  */
 const PUBLIC_USER_COLUMNS = `
   id_utilisateurs,
@@ -45,7 +45,7 @@ const PUBLIC_USER_COLUMNS = `
 `;
 
 // ============================================================================
-// 🔍 MÉTHODES DE LECTURE (READ)
+// MÉTHODES DE LECTURE (READ)
 // ============================================================================
 
 /**
@@ -146,7 +146,7 @@ export const usernameExists = async (nom_utilisateur) => {
 };
 
 // ============================================================================
-// ➕ MÉTHODE DE CRÉATION (CREATE)
+// MÉTHODE DE CRÉATION (CREATE)
 // ============================================================================
 
 /**
@@ -166,7 +166,7 @@ export const usernameExists = async (nom_utilisateur) => {
  *   nom: 'Diallo',
  *   prenom: 'Aminata',
  *   email: 'amina@example.com',
- *   mot_de_passe: hashedPassword // ⚠️ Toujours hasher avant d'appeler cette fonction
+ *   mot_de_passe: hashedPassword // Toujours hasher avant d'appeler cette fonction
  * });
  * if (result.success) { /* envoyer email de bienvenue *\/ }
  */
@@ -197,7 +197,7 @@ export const create = async (userData) => {
       prenom,
       email,
       nom_utilisateur,
-      mot_de_passe, // ⚠️ Doit être déjà hashé par le controller
+      mot_de_passe, // Doit être déjà hashé par le controller
       date_de_naissance,
       sexe
     ];
@@ -210,7 +210,7 @@ export const create = async (userData) => {
     };
 
   } catch (err) {
-    // 🎯 Gestion spécifique des erreurs PostgreSQL
+    // Gestion spécifique des erreurs PostgreSQL
     if (err.code === '23505') { // unique_violation
       // Identifier quelle contrainte a été violée
       if (err.constraint === 'utilisateurs_email_key') {
@@ -237,7 +237,7 @@ export const create = async (userData) => {
 };
 
 // ============================================================================
-// ✏️ MÉTHODE DE MISE À JOUR (UPDATE)
+// MÉTHODE DE MISE À JOUR (UPDATE)
 // ============================================================================
 
 /**
@@ -258,7 +258,7 @@ export const create = async (userData) => {
  */
 export const update = async (id, updateData) => {
   try {
-    // 🛡️ Filtrage strict : on ne garde QUE les champs autorisés
+    // Filtrage strict : on ne garde QUE les champs autorisés
     // Cela empêche un attaquant d'envoyer { role: 'admin' } pour se promouvoir
     const allowedUpdates = {};
     for (const field of ALLOWED_UPDATE_FIELDS) {
@@ -327,7 +327,7 @@ export const update = async (id, updateData) => {
 };
 
 // ============================================================================
-// 🔐 MÉTHODES SPÉCIALISÉES (SÉCURITÉ)
+// MÉTHODES SPÉCIALISÉES (SÉCURITÉ)
 // ============================================================================
 
 /**
@@ -395,7 +395,7 @@ export const remove = async (id) => {
 };
 
 // ============================================================================
-// 📊 MÉTHODES UTILITAIRES
+// MÉTHODES UTILITAIRES
 // ============================================================================
 
 /**
