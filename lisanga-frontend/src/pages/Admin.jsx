@@ -335,6 +335,9 @@ function AdminCategories() {
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
+  const [editingCategoryId, setEditingCategoryId] = useState(null);
+  const [editName, setEditName] = useState('');
+  const [editDescription, setEditDescription] = useState('');
   const [feedback, setFeedback] = useState('');
 
   const isFormValid = useMemo(() => name.trim().length >= 2, [name]);
@@ -393,6 +396,43 @@ function AdminCategories() {
     }
   };
 
+  const handleStartEdit = (category) => {
+    setEditingCategoryId(category.id);
+    setEditName(category.name);
+    setEditDescription(category.description || '');
+    setFeedback('');
+  };
+
+  const handleCancelEdit = () => {
+    setEditingCategoryId(null);
+    setEditName('');
+    setEditDescription('');
+  };
+
+  const handleSaveEdit = async (category) => {
+    const trimmedName = editName.trim();
+    if (trimmedName.length < 2) {
+      setFeedback('Le nom de categorie doit contenir au moins 2 caracteres.');
+      return;
+    }
+
+    try {
+      const response = await adminService.updateCategory(category.id, {
+        name: trimmedName,
+        description: editDescription.trim()
+      });
+
+      setCategories((prev) =>
+        prev.map((item) => (item.id === category.id ? response.category : item))
+      );
+      setFeedback('Categorie modifiee avec succes.');
+      handleCancelEdit();
+    } catch (error) {
+      console.error('Erreur modification categorie :', error);
+      setFeedback('Modification impossible.');
+    }
+  };
+
   if (loading) {
     return <Loader />;
   }
@@ -438,17 +478,69 @@ function AdminCategories() {
           <tbody>
             {categories.map((category) => (
               <tr key={category.id}>
-                <td>{category.name}</td>
-                <td>{category.slug}</td>
-                <td>{category.description || '-'}</td>
                 <td>
-                  <button
-                    type="button"
-                    className="admin-btn admin-btn--danger"
-                    onClick={() => handleDeleteCategory(category)}
-                  >
-                    Supprimer
-                  </button>
+                  {editingCategoryId === category.id ? (
+                    <input
+                      type="text"
+                      className="admin-input"
+                      value={editName}
+                      onChange={(event) => setEditName(event.target.value)}
+                    />
+                  ) : (
+                    category.name
+                  )}
+                </td>
+                <td>{category.slug}</td>
+                <td>
+                  {editingCategoryId === category.id ? (
+                    <input
+                      type="text"
+                      className="admin-input"
+                      value={editDescription}
+                      onChange={(event) => setEditDescription(event.target.value)}
+                    />
+                  ) : (
+                    category.description || '-'
+                  )}
+                </td>
+                <td>
+                  <div className="admin-actions">
+                    {editingCategoryId === category.id ? (
+                      <>
+                        <button
+                          type="button"
+                          className="admin-btn admin-btn--success"
+                          onClick={() => handleSaveEdit(category)}
+                        >
+                          Enregistrer
+                        </button>
+                        <button
+                          type="button"
+                          className="admin-btn admin-btn--warning"
+                          onClick={handleCancelEdit}
+                        >
+                          Annuler
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          type="button"
+                          className="admin-btn admin-btn--primary"
+                          onClick={() => handleStartEdit(category)}
+                        >
+                          Modifier
+                        </button>
+                        <button
+                          type="button"
+                          className="admin-btn admin-btn--danger"
+                          onClick={() => handleDeleteCategory(category)}
+                        >
+                          Supprimer
+                        </button>
+                      </>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}
