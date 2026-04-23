@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000/api';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 const USE_MOCK = import.meta.env.VITE_USE_MOCK === 'true';
 
 export const api = {
@@ -45,15 +45,17 @@ export const api = {
     if (USE_MOCK) {
       return { useMock: true, data };
     }
-    
+
+    const isFormData = data instanceof FormData;
+
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
       method: 'PUT',
       headers: {
-        'Content-Type': 'application/json',
+        ...(!isFormData && { 'Content-Type': 'application/json' }),
         ...getAuthHeaders(),
         ...options.headers
       },
-      body: JSON.stringify(data),
+      body: isFormData ? data : JSON.stringify(data),
       ...options
     });
     

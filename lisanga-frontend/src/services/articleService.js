@@ -8,7 +8,15 @@ const API_ORIGIN = API_BASE_URL.replace(/\/api\/?$/, '');
 const normalizeImageUrl = (value) => {
   if (!value) return null;
   if (value.startsWith('http://') || value.startsWith('https://')) return value;
-  const normalized = value.startsWith('/') ? value : `/${value}`;
+
+  // Compatibilité anciennes valeurs stockées en chemin absolu Windows/Linux.
+  const unixPath = value.replace(/\\/g, '/');
+  const uploadsIndex = unixPath.indexOf('/uploads/');
+  if (uploadsIndex >= 0) {
+    return `${API_ORIGIN}${unixPath.slice(uploadsIndex)}`;
+  }
+
+  const normalized = unixPath.startsWith('/') ? unixPath : `/${unixPath}`;
   return `${API_ORIGIN}${normalized}`;
 };
 
@@ -294,7 +302,29 @@ export const articleService = {
       };
     }
 
-    throw new Error("L'édition d'article n'est pas disponible dans cette version MVP");
+    const payload = new FormData();
+
+    const categoryValue = formData.get('id_categorie') || formData.get('category');
+    let categoryId = Number(categoryValue);
+    if (!Number.isInteger(categoryId) || categoryId <= 0) {
+      const resolved = await getCategoryIdByName(String(categoryValue || ''));
+      categoryId = resolved;
+    }
+
+    payload.append('id_categorie', String(categoryId || ''));
+    payload.append('titre', formData.get('titre') || formData.get('title') || '');
+    payload.append('contenu', formData.get('contenu') || formData.get('content') || '');
+
+    const photoFile = formData.get('photo') || formData.get('image');
+    if (photoFile) {
+      payload.append('photo', photoFile);
+    }
+
+    const response = await api.put(`/articles/${id}`, payload);
+    return {
+      article: mapBackendArticle(response?.data),
+      message: response?.message || 'Article mis à jour avec succès',
+    };
   },
   
   deleteArticle: async (id) => {
@@ -324,8 +354,8 @@ export const articleService = {
       localStorage.setItem(storageKey, 'like');
       return { action: 'liked', vote: 'like' };
     }
-    
-    return api.post(`/articles/${id}/like`);
+
+    return api.post(`/articles/${id}/like`, { valeur: 'like' });
   },
   
   dislikeArticle: async (id) => {
@@ -343,14 +373,43 @@ export const articleService = {
       localStorage.setItem(storageKey, 'dislike');
       return { action: 'disliked', vote: 'dislike' };
     }
-    
-    return api.post(`/articles/${id}/dislike`);
+
+    return api.post(`/articles/${id}/like`, { valeur: 'dislike' });
+  },
+
+  removeReaction: async (id) => {
+    if (isMockMode()) {
+      await delay(300);
+      localStorage.removeItem(`lisanga_vote_${id}`);
+      return { action: 'removed', vote: null, counts: null };
+    }
+
+    return api.delete(`/articles/${id}/like`);
+  },
+
+  getReactionCounts: async (id) => {
+    if (isMockMode()) {
+      await delay(150);
+      return { likes: 0, dislikes: 0 };
+    }
+
+    const response = await api.get(`/articles/${id}/reactions`);
+    return response?.counts || { likes: 0, dislikes: 0 };
   },
   
-  getUserVote: (articleId) => {
+  getUserVote: async (articleId) => {
     if (isMockMode()) {
       return localStorage.getItem(`lisanga_vote_${articleId}`);
     }
-    return null;
+
+    const token = localStorage.getItem('lisanga_access_token');
+    if (!token) return null;
+
+    try {
+      const response = await api.get(`/articles/${articleId}/reactions/me`);
+      return response?.myReaction || null;
+    } catch {
+      return null;
+    }
   }
 };
