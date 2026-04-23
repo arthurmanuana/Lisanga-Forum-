@@ -26,6 +26,19 @@ CREATE TABLE articles (
         REFERENCES utilisateurs(id_utilisateurs) ON DELETE CASCADE
 );
 
+ALTER TABLE articles ADD COLUMN id_categorie INTEGER NOT NULL;
+ALTER TABLE articles ADD CONSTRAINT fk_categories FOREIGN KEY (id_categorie) 
+REFERENCES categories(id_categorie) ON DELETE CASCADE;
+
+
+CREATE TABLE categories (
+    id_categorie SERIAL PRIMARY KEY,
+    nom VARCHAR(50) NOT NULL UNIQUE,
+    description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 CREATE TABLE commentaires (
     id_commentaire SERIAL PRIMARY KEY,
     id_article INTEGER NOT NULL,
@@ -39,6 +52,13 @@ CREATE TABLE commentaires (
     CONSTRAINT fk_utilisateur_commentaire FOREIGN KEY (id_utilisateur)
         REFERENCES utilisateurs(id_utilisateurs) ON DELETE CASCADE
 );
+
+ALTER TABLE commentaires 
+ADD COLUMN id_parent_commentaire INTEGER;
+
+FOREIGN KEY (id_parent_commentaire) 
+REFERENCES commentaires(id_commentaire) 
+ON DELETE CASCADE;
 
 CREATE TABLE reaction (
     id_reaction SERIAL PRIMARY KEY,
@@ -54,3 +74,4 @@ CREATE TABLE reaction (
         REFERENCES utilisateurs(id_utilisateurs) ON DELETE CASCADE,
     CONSTRAINT unique_reaction UNIQUE (id_article, id_utilisateur)
 );
+
