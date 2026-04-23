@@ -21,14 +21,14 @@ export const updateProfilePhoto = async (req, res) => {
       return respondError(res, 400, 'NO_FILE_UPLOADED', 'Aucune image n\'a été envoyée');
     }
 
-    // 🗑️ Supprimer l'ancienne photo si elle existe localement
+    // Supprimer l'ancienne photo si elle existe localement
     const currentUser = await findPublicById(req.user.id);
     if (currentUser?.photo?.startsWith('/uploads/avatars/')) {
       const oldPath = path.join(process.cwd(), currentUser.photo);
       if (fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
     }
 
-    // 💾 Chemin public stocké en BDD
+    // Chemin public stocké en BDD
     const photoPath = `/uploads/avatars/${req.file.filename}`;
     const result = await update(req.user.id, { photo: photoPath });
 
@@ -66,7 +66,7 @@ const respondError = (res, status, code, message) =>
  * Format de réponse succès standardisé
  */
 const respondSuccess = (res, status, data = {}, message = 'Opération réussie') => 
-  res.status(status).json({ error: false, code: 'SUCCESS', message, ...data });
+  res.status(status).json({ data, message });
 
 // ============================================================================
 // GET /api/users/me - Profil de l'utilisateur connecté
@@ -82,7 +82,7 @@ export const getProfile = async (req, res) => {
     }
 
     // Retourne exactement le format attendu par le frontend
-    respondSuccess(res, 200, { user });
+    res.status(200).json({ data: { user }, message: 'Profil récupéré' });
   } catch (err) {
     respondError(res, 500, 'SERVER_ERROR', 'Erreur lors de la récupération du profil');
   }

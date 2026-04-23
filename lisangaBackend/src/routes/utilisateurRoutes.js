@@ -16,13 +16,13 @@ const router = Router();
 // Protection globale : toutes les routes de ce fichier exigent un token valide
 router.use(authenticate);
 
-// GET /api/users/me → Profil connecté
-router.get('/me', userController.getProfile);
+// GET /api/auth/me → Profil connecté
+router.get('/profile', userController.getProfile);
 
-// PUT /api/users/me → Modification profil
+// PUT /api/auth/me → Modification profil
 router.put('/me', userController.updateProfile);
 
-// PUT /api/users/me/password → Changement mot de passe
+// PUT /api/auth/me/password → Changement mot de passe
 router.put('/me/password', userController.changePassword);
 
 // Route dédiée à l'upload (multipart/form-data)

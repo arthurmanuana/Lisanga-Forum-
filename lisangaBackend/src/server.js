@@ -14,6 +14,7 @@ import categorieRoutes from './routes/categorieRoutes.js';
 import articleRoutes from './routes/articleRoutes.js';
 import commentaireRoutes from './routes/commentaireRoutes.js';
 
+
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -55,13 +56,13 @@ app.get("/api/health/db", async (req, res) => {
 
 // Montage des routes API
 app.use('/api/auth', authRoutes);          // Inscription / Connexion / Refresh
-app.use('/api/users', utilisateurRoutes);  // Profil / Update / Password
+app.use('/api/auth', utilisateurRoutes);  // Profil / Update / Password
 app.use('/api/articles', reactionRoutes);  // Like/Dislike (monte sous /api/articles)
 app.use('/api/admin', adminRoutes);        // Dashboard admin
 app.use('/api/categories', categorieRoutes);
 app.use('/api/articles', articleRoutes);
 app.use('/api/commentaires', commentaireRoutes);
-
+app.use('/api/admin', adminRoutes); // Routes admin protégées
 app.use('/uploads', express.static(join(__dirname, 'uploads')));
 // ... (routes admin & articles à venir)
 
