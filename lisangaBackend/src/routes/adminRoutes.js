@@ -1,30 +1,28 @@
 /**
  * @file adminRoutes.js
- * @description Routes administrateur protégées (stats + CRUD catégories)
- * @conforme PDF: ENDPOINT 6 + gestion catégories | Protection JWT + rôle admin
+ * @description Routes réservées aux administrateurs
+ * @conforme PDF: ENDPOINT 6 | Protection JWT + Rôle admin obligatoire
  */
 
 import { Router } from 'express';
 import * as adminController from '../controllers/adminController.js';
 import { authenticate } from '../middlewares/auth.js';
 import { authorizeRoles } from '../middlewares/role.js';
-import { validate } from '../middlewares/validate.js';
-import { categorySchema } from '../schemas/adminSchema.js';
 
 const router = Router();
 
-// Double protection globale : JWT valide + role admin
+// Double protection :
+// 1. L'utilisateur doit être connecté (JWT valide)
+// 2. Son rôle DOIT être 'admin'
 router.use(authenticate);
 router.use(authorizeRoles('admin'));
 
-// Stats enrichies
+// GET /api/admin/stats
 router.get('/stats', adminController.getStats);
 router.get('/users', adminController.getUsers);
 
-// CRUD Categories
-router.get('/categories', adminController.getCategories);
-router.post('/categories', validate(categorySchema.create), adminController.createCategory);
-router.put('/categories/:id', validate(categorySchema.update), adminController.updateCategory);
-router.delete('/categories/:id', adminController.deleteCategory);
+// Exemple de future route (décommenter quand prête) :
+// router.delete('/users/:id', adminController.deleteUser);
+// router.put('/articles/:id/moderate', adminController.moderateArticle);
 
 export default router;

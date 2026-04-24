@@ -21,7 +21,7 @@ const respondError = (res, status, code, message) =>
  * Format de réponse succès standardisé
  */
 const respondSuccess = (res, status, data = {}, message = 'Opération réussie') => 
-  res.status(status).json({ data, message });
+  res.status(status).json({ error: false, code: 'SUCCESS', message, ...data });
 
 // ============================================================================
 // POST /api/articles/:id/like - Toggle like/dislike

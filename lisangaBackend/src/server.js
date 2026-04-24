@@ -14,7 +14,6 @@ import categorieRoutes from './routes/categorieRoutes.js';
 import articleRoutes from './routes/articleRoutes.js';
 import commentaireRoutes from './routes/commentaireRoutes.js';
 
-
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -62,9 +61,9 @@ app.use('/api/admin', adminRoutes);        // Dashboard admin
 app.use('/api/categories', categorieRoutes);
 app.use('/api/articles', articleRoutes);
 app.use('/api/commentaires', commentaireRoutes);
+
 app.use('/uploads', express.static(join(__dirname, '..', 'uploads')));
-
-
+// ... (routes admin & articles à venir)
 
 app.use((req, res) => {
   res.status(404).json({

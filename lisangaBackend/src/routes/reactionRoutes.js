@@ -25,7 +25,6 @@ const router = Router();
  * Body attendu: { "valeur": "like" | "dislike" }
  */
 router.post('/:id/like', authenticate, validate(reactionSchema), reactionController.toggleReaction);
-router.post('/:id/dislike', authenticate, validate(reactionSchema), reactionController.toggleReaction);
 
 /**
  * DELETE /api/articles/:id/like
