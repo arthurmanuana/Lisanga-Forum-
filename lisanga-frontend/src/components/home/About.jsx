@@ -8,13 +8,13 @@ import elie from '../../../assets/elie.webp';
 import Eliana from '../../../assets/Eliana.webp';
 
 const teamMembers = [
-  { name: 'Emmanuel', image: Emmanuel },
-  { name: 'Kalilwa', image: Kalilwa },
-  { name: 'Karagi', image: karagi },
-  { name: 'Arthur', image: Arthur },
-  { name: 'Benjamin', image: benjamin },
-  { name: 'Elie', image: elie },
-  { name: 'Eliana', image: Eliana },
+  { name: 'G.K Emmanuel', image: Emmanuel },
+  { name: 'JF Kalilwa', image: Kalilwa },
+  { name: 'B.M Karagi', image: karagi },
+  { name: 'M. Arthur', image: Arthur },
+  { name: 'N. Benjamin', image: benjamin },
+  { name: 'K. Elie', image: elie },
+  { name: 'L. Eliana', image: Eliana },
 ];
 
 function About() {
@@ -30,7 +30,7 @@ function About() {
               Lisanga est une plateforme développée par <strong>M-Nuru Tech</strong> dans le but de connecter les talents Universitaires congolais du numérique et de promouvoir l'innovation technologique sur le continent. Permettant aux étudiants de présenter leurs projets, de collaborer avec d'autres passionnés et de trouver des opportunités professionnelles, Lisanga vise à créer une communauté dynamique et inclusive autour du numérique en RDC.
             </p>
             <p>
-              <strong>M-Nuru Tech</strong>,une initiative portée par de jeunes étudiants congolais animés par une passion profonde pour l’informatique et les technologies. Plus qu’une simple structure, M-Nuru Tech incarne une vision : celle d’apporter de la lumière là où les défis persistent. Le mot Nuru, qui signifie « lumière », reflète pleinement leur philosophie — éclairer les problématiques du monde industriel et du quotidien par des solutions innovantes, intelligentes et accessibles.
+              <strong>M-Nuru Tech</strong>, une initiative portée par de jeunes étudiants congolais animés par une passion profonde pour l’informatique et les technologies. Plus qu’une simple structure, M-Nuru Tech incarne une vision : celle d’apporter de la lumière là où les défis persistent. Le mot Nuru, qui signifie « lumière », reflète pleinement leur philosophie — éclairer les problématiques du monde industriel et du quotidien par des solutions innovantes, intelligentes et accessibles.
             </p>
 
           </div>
