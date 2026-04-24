@@ -6,6 +6,8 @@ import Hero from '../components/home/Hero';
 import CategoryFilter from '../components/home/CategoryFilter';
 import ArticleCard from '../components/home/ArticleCard';
 import CTASection from '../components/home/CTASection';
+import About from '../components/home/About';
+import Contact from '../components/home/Contact';
 import Loader from '../components/common/Loader';
 import ErrorMessage from '../components/common/ErrorMessage';
 import Button from '../components/common/Button';
@@ -330,6 +332,10 @@ function Home() {
       </section>
       
       <CTASection />
+      
+      <About />
+      
+      <Contact />
       
       <Footer />
     </>

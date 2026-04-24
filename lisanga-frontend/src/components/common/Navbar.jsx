@@ -7,8 +7,8 @@ import './Navbar.css';
 const NAV_LINKS = [
   { label: 'Accueil', href: '/' },
   { label: 'Articles', href: '/articles' },
-  { label: 'À propos', href: '/a-propos' },
-  { label: 'Contact', href: '/contact' },
+  { label: 'À propos', href: '/#about' },
+  { label: 'Contact', href: '/#contact' },
 ];
 
 function Navbar() {
